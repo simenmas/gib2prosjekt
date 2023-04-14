@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+{% load leaflet_tags %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    {% leaflet_js %}
+    {% leaflet_css %}
+
+</head>
+<body>
+    <h1>Hallo</h1>
+
+    <div id="map">
+        <script>
+
+    function map_init_basic (map, options) {
+        map.setView([63.0,10.0], 13)
+        L.marker([10.0,63.0]).addTo(map);
+
+    }
+        </script>
+        {% leaflet_map "yourmap" callback="window.map_init_basic" %}
+
+    </div>
+</body>
+</html>
