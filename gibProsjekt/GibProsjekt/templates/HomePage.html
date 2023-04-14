@@ -11,18 +11,32 @@
     {% leaflet_js %}
     {% leaflet_css %}
 
+    <style>
+
+        #map {height: 360px; width: 800px}
+
+
+    </style>
+
 </head>
 <body>
     <h1>Hallo</h1>
 
     <div id="map">
         <script>
+            function onMapClick() {
+                console.log('hallo')
+            }
 
-    function map_init_basic (map, options) {
-        map.setView([63.0,10.0], 13)
-        L.marker([10.0,63.0]).addTo(map);
+            function map_init_basic (map, options) {
+                map.setView([63.0, 10.0], 13)
+                L.marker([10.0, 63.0]).addTo(map);
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+                map.addEventListener('click',onMapClick())
+            }
 
-    }
         </script>
         {% leaflet_map "yourmap" callback="window.map_init_basic" %}
 
