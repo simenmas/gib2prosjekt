@@ -6,37 +6,39 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>MyStudyGIS</title>
 
     {% leaflet_js %}
     {% leaflet_css %}
 
     <style>
-
-        #map {height: 360px; width: 800px}
-
-
+        #header {height: 5vh; width: 99vw; background-color: #41B439; color: white}
+        #map {height: 94vh; width: 99vw}
     </style>
 
 </head>
 <body>
-    <h1>Hallo</h1>
+    <div id="header">
+        <h1 style="font-family: monospace; padding-left: 2vw;">MyStudyGIS</h1>
+        Søk og finn
+        I nærheten
+        Veibeskrivelse
+    </div>
 
     <div id="map">
-        <script>
+        <script style="height: 94vh; width: 99vw;">
             function onMapClick() {
                 console.log('hallo')
             }
 
             function map_init_basic (map, options) {
-                map.setView([63.0, 10.0], 13)
-                L.marker([10.0, 63.0]).addTo(map);
+                map.setView([63.418529, 10.40284], 13)
+                /*L.marker([63.418529, 10.40284]).addTo(map);
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);*/
                 map.addEventListener('click',onMapClick())
             }
-
         </script>
         {% leaflet_map "yourmap" callback="window.map_init_basic" %}
 
