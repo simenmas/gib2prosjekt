@@ -17,6 +17,8 @@
                 font-weight: bolder;
                 border: 0;
                 cursor: pointer;
+                padding-top: 2vh;
+                padding-bottom: 2vh;
             }
             #header {
                 height: 7vh;
@@ -41,13 +43,17 @@
             <div id="box">
                 <div style="width: 15vw;"><h1>MyStudyGIS</h1></div>
                 <div style="width: 65vw;"></div>
-                <div style="width: 10vw;"><button
+                <div style="width: 10vw;">
+                    <button
                     onclick="window.location.href='http://127.0.0.1:8000/accounts/login/';"
-                    style="padding-top: 2vh; padding-bottom: 2vh;"
                     class="button">
-                    Logg inn
-                </button></div>
-                <div style="width: 10vw;"><button style="padding-top: 2vh; padding-bottom: 2vh;" class="button">Registrer</button></div>
+                    Logg inn</button>
+                </div>
+                <div style="width: 10vw;">
+                    <button
+                    class="button">
+                    Registrer</button>
+                </div>
             </div>
         </div>
         <div id="map" style="position: relative;"></div>
@@ -64,7 +70,7 @@
     // Initialiserer kartet:
     var map = L.map('map', {
         layers: [osm_map], // Default basiskart
-        maxZoom: 20, // Justerer zoom-nivået
+        maxZoom: 18, // Justerer zoom-nivået
         minZoom: 6,
         zoomControl: false // Fjerner defaul zoom-knapper
     }).setView([63.418529, 10.40284], 13)

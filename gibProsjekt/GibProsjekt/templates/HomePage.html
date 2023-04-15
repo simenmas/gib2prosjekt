@@ -9,6 +9,17 @@
         {% leaflet_js %}
         {% leaflet_css %}
         <style>
+            button {
+                background-color: #41B439;
+                color: white;
+                font-family: monospace;
+                font-size: 1.5em;
+                font-weight: bolder;
+                border: 0;
+                cursor: pointer;
+                padding-top: 2vh;
+                padding-bottom: 2vh;
+            }
             #header {
                 height: 7vh;
                 background-color: #41B439;
@@ -30,9 +41,21 @@
         <div id="header">
             <div id="box">
                 <div style="width: 15vw;"><h1 style="font-family: monospace;">MyStudyGIS</h1></div>
-                <div style="width: 10vw;"><h3 style="font-family: monospace; padding-top: 1vh;">Søk og finn</h3></div>
-                <div style="width: 10vw;"><h3 style="font-family: monospace; padding-top: 1vh;">I nærheten</h3></div>
-                <div style="width: 10vw;"><h3 style="font-family: monospace; padding-top: 1vh;">Veibeskrivelse</h3></div>
+                <div style="width: 10vw;">
+                    <button class="button">
+                        Søk og finn
+                    </button>
+                </div>
+                <div style="width: 10vw;">
+                    <button class="button">
+                        I nærheten
+                    </button>
+                </div>
+                <div style="width: 10vw;">
+                    <button class="button">
+                        Veibeskrivelse
+                    </button>
+                </div>
                 <div style="width: 50vw;"></div>
                 <div style="width: 5vw;"><h3 style="font-family: monospace; padding-top: 1vh;">Menu</h3></div>
             </div>
@@ -54,7 +77,7 @@
     // Initialiserer kartet:
     var map = L.map('map', {
         layers: [osm_map], // Default basiskart
-        maxZoom: 20, // Justerer zoom-nivået
+        maxZoom: 18, // Justerer zoom-nivået
         minZoom: 6,
         zoomControl: false // Fjerner defaul zoom-knapper
     }).setView([63.418529, 10.40284], 13)
