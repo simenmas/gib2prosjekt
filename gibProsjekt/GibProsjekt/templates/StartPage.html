@@ -1,0 +1,62 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    {% load leaflet_tags %}
+    <head>
+        <meta charset="UTF-8">
+        <title>MyStudyGIS</title>
+        {% leaflet_js %}
+        {% leaflet_css %}
+        <style>
+            #header {
+                height: 7vh;
+                background-color: #41B439;
+                color: white;
+            }
+            #box {
+                display: flex;
+                flex-grow: 4;
+                flex-direction: row;
+                text-align: center;
+            }
+            #map {
+                position: absolute;
+                height: 93vh !important;
+            }
+        </style>
+    </head>
+    <body style="padding: 0; margin: 0;">
+        <div id="header">
+            <div id="box">
+                <div style="width: 15vw;"><h1 style="font-family: monospace;">MyStudyGIS</h1></div>
+                <div style="width: 65vw;"></div>
+                <div style="width: 10vw;"><h3 style="font-family: monospace; padding-top: 1vh;">Logg inn</h3></div>
+                <div style="width: 10vw;"><h3 style="font-family: monospace; padding-top: 1vh;">Registrer</h3></div>
+            </div>
+        </div>
+        <div id="map" style="position: relative;"></div>
+    </body>
+</html>
+
+<script type="text/javascript">
+
+    // Bestemme URL til basiskartet:
+    var osm_map = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright"<OpenStreetMap</a> contributors'
+    });
+
+    // Initialiserer kartet:
+    var map = L.map('map', {
+        layers: [osm_map], // Default basiskart
+        maxZoom: 20, // Justerer zoom-nivået
+        minZoom: 6,
+        zoomControl: false // Fjerner defaul zoom-knapper
+    }).setView([63.418529, 10.40284], 13)
+
+    // Bestemmer plasseringen av zoom-knappene
+    L.control.zoom({
+        position: 'bottomright'
+    }).addTo(map);
+
+</script>
