@@ -12,6 +12,23 @@
         {% bootstrap_css %}
         {% bootstrap_javascript %}
         <style>
+
+            .dropdown {
+                position: relative;
+                display: block;
+            }
+
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #AB39B4;
+                color: white;
+                min-width: 5vw;
+                z-index: 999;
+            }
+
+            .show {display: block;}
+
             .button {
                 background-color: #41B439;
                 color: white;
@@ -19,6 +36,7 @@
                 font-size: 1.3em;
                 border: 0;
                 cursor: pointer;
+                height: 7vh;
                 padding-top: 2vh;
                 padding-bottom: 2vh;
             }
@@ -37,6 +55,7 @@
             #map {
                 position: absolute;
                 height: 93vh !important;
+                z-index: 1;
             }
         </style>
     </head>
@@ -61,21 +80,21 @@
                 </div>
                 <div style="width: 50vw;"></div>
                 <div class="dropdown" style="width: 5vw;">
-                    <button class="button">
+                    <button class="button" onclick="myFunction()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="2vw" height="2vw" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                             <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                         </svg>
                     </button>
-                    <div class="content" style="z-index: 999;">
-                        <p>Profil</p>
-                        <p>Hjem</p>
-                        <p>Logg ut</p>
+                    <div id="myDropdown" class="dropdown-content">
+                        <p style="font-family: monospace; font-weight: bold;">Profil</p>
+                        <p style="font-family: monospace; font-weight: bold;">Hjem</p>
+                        <p style="font-family: monospace; font-weight: bold;">Logg ut</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="map" style="position: relative; z-index: 1;"></div>
+        <div id="map" style="position: relative;"></div>
     </body>
 </html>
 
@@ -99,19 +118,24 @@
         position: 'bottomright'
     }).addTo(map);
 
-    var coll = document.getElementsByClassName("dropdown");
-    var i;
+    /* When the user clicks on the button, 
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
 
-    for (i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var content = this.nextElementSibling;
-        if (content.style.display === "block") {
-        content.style.display = "none";
-        } else {
-        content.style.display = "block";
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.button')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
         }
-    });
     }
 
 </script>

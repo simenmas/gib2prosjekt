@@ -20,32 +20,9 @@
   </head>
   <body class="text-center">
     <form class="form-signin" method = "post">
-      <h1 class="h3 mb-3 font-weight-normal">Logg inn</h1>
+      <h1 class="h3 mb-3 font-weight-normal" style="font-family: monospace;">Logg inn</h1>
       {% csrf_token %}
-        {{ form.as_p }}
-        <!--
-      <input
-        id="inputEmail"
-        class="form-control"
-        placeholder="E-post"
-        required=""
-        autofocus=""
-        type="email"
-        style="font-family: monospace;"
-      />
-      <input
-        id="inputPassword"
-        class="form-control"
-        placeholder="Passord"
-        required=""
-        type="password"
-        style="font-family: monospace;"
-      />
-      <div class="checkbox mb-3">
-        <label>
-          <input value="remember-me" type="checkbox" style="font-family: monospace;"/> Husk meg
-        </label>
-      </div> -->
+      {{ form.as_p }}
       <button
         class="btn btn-lg btn-primary btn-block"
         type="submit"
@@ -109,6 +86,7 @@
     margin-bottom: -1px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    font-family: monospace;
   }
 
   .form-signin input[type="password"] {
