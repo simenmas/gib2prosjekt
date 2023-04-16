@@ -8,13 +8,15 @@
         <title>MyStudyGIS</title>
         {% leaflet_js %}
         {% leaflet_css %}
+        {% load  bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
         <style>
-            button {
+            .button {
                 background-color: #41B439;
                 color: white;
                 font-family: monospace;
-                font-size: 1.5em;
-                font-weight: bolder;
+                font-size: 1.3em;
                 border: 0;
                 cursor: pointer;
                 padding-top: 2vh;
@@ -26,6 +28,7 @@
                 color: white;
             }
             #box {
+                height: 7vh;
                 display: flex;
                 flex-grow: 6;
                 flex-direction: row;
@@ -40,9 +43,9 @@
     <body style="padding: 0; margin: 0;">
         <div id="header">
             <div id="box">
-                <div style="width: 15vw;"><h1 style="font-family: monospace;">MyStudyGIS</h1></div>
+                <div style="width: 15vw;"><h1 style="font-family: monospace; font-weight: bolder; padding-top: 1vh;">MyStudyGIS</h1></div>
                 <div style="width: 10vw;">
-                    <button class="button">
+                    <button class="button" style="font-weight: bolder;">
                         Søk og finn
                     </button>
                 </div>
@@ -57,15 +60,24 @@
                     </button>
                 </div>
                 <div style="width: 50vw;"></div>
-                <div style="width: 5vw;"><h3 style="font-family: monospace; padding-top: 1vh;">Menu</h3></div>
+                <div class="dropdown" style="width: 5vw;">
+                    <button class="button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="2vw" height="2vw" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                        </svg>
+                    </button>
+                    <div class="content" style="z-index: 999;">
+                        <p>Profil</p>
+                        <p>Hjem</p>
+                        <p>Logg ut</p>
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="map" style="position: relative;"></div>
+        <div id="map" style="position: relative; z-index: 1;"></div>
     </body>
 </html>
-
-<!-- Importerer ikoner -->
-<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
 <script type="text/javascript">
 
@@ -86,5 +98,20 @@
     L.control.zoom({
         position: 'bottomright'
     }).addTo(map);
+
+    var coll = document.getElementsByClassName("dropdown");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+        content.style.display = "none";
+        } else {
+        content.style.display = "block";
+        }
+    });
+    }
 
 </script>
