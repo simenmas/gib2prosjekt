@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mapapp',
     'leaflet',
-
 ]
 
 
@@ -136,3 +135,5 @@ LEAFLET_CONFIG = {
 }
 
 LOGIN_REDIRECT_URL = "/"
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'

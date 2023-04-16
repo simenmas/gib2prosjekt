@@ -19,9 +19,11 @@
     ></script>
   </head>
   <body class="text-center">
-    <form class="form-signin">
+    <form class="form-signin" method = "post">
       <h1 class="h3 mb-3 font-weight-normal">Logg inn</h1>
       {% csrf_token %}
+        {{ form.as_p }}
+        <!--
       <input
         id="inputEmail"
         class="form-control"
@@ -41,7 +43,7 @@
         <label>
           <input value="remember-me" type="checkbox" /> Remember me
         </label>
-      </div>
+      </div> -->
       <button
         class="btn btn-lg btn-primary btn-block"
         type="submit"
