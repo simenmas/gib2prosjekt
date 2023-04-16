@@ -8,11 +8,25 @@
         <title>MyStudyGIS</title>
         {% leaflet_js %}
         {% leaflet_css %}
+        {% load  bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
         <style>
+            .button {
+                background-color: #41B439;
+                color: white;
+                font-family: monospace;
+                font-size: 1.3em;
+                border: 0;
+                cursor: pointer;
+                padding-top: 2vh;
+                padding-bottom: 2vh;
+            }
             #header {
                 height: 7vh;
                 background-color: #41B439;
                 color: white;
+                font-family: monospace;
             }
             #box {
                 display: flex;
@@ -29,15 +43,23 @@
     <body style="padding: 0; margin: 0;">
         <div id="header">
             <div id="box">
-                <div style="width: 15vw;"><h1 style="font-family: monospace;">MyStudyGIS</h1></div>
+                <div style="width: 15vw;"><h1 style="font-family: monospace; font-weight: bolder; padding-top: 1vh;">MyStudyGIS</h1></div>
                 <div style="width: 65vw;"></div>
-                <a href = "/accounts/login">
-                <div style="width: 10vw;"><h3 style="font-family: monospace; padding-top: 1vh;">Logg inn</h3>
-                </a>
+                <div style="width: 10vw;">
+                    <button
+                        onclick="window.location.href='http://127.0.0.1:8000/accounts/login/';"
+                        class="button">
+                        Logg inn
+                    </button>
                 </div>
-                <a href = "/registration">
-                <div style="width: 10vw;"><h3 style="font-family: monospace; padding-top: 1vh;">Registrer</h3></div>
-                </a>
+
+                <div style="width: 10vw;">
+                    <button
+                        onclick="window.location.href='http://127.0.0.1:8000/registration/';"
+                        class="button">
+                        Registrer
+                    </button>
+                </div>
             </div>
         </div>
         <div id="map" style="position: relative;"></div>
@@ -54,7 +76,7 @@
     // Initialiserer kartet:
     var map = L.map('map', {
         layers: [osm_map], // Default basiskart
-        maxZoom: 20, // Justerer zoom-nivået
+        maxZoom: 18, // Justerer zoom-nivået
         minZoom: 6,
         zoomControl: false // Fjerner defaul zoom-knapper
     }).setView([63.418529, 10.40284], 13)
