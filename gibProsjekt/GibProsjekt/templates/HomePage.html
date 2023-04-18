@@ -6,19 +6,20 @@
     <head>
         <meta charset="UTF-8">
         <title>MyStudyGIS</title>
+        
         {% leaflet_js %}
         {% leaflet_css %}
         {% load  bootstrap5 %}
         {% bootstrap_css %}
         {% bootstrap_javascript %}
-        <style>
 
-            .dropdown {
+        <style>
+            .dropdown { /* Plassering av dropdown */
                 position: relative;
                 display: block;
             }
 
-            .dropdown-content {
+            .dropdown-content { /* Innholdet i dropdownen */
                 display: none;
                 position: absolute;
                 background-color: #AB39B4;
@@ -29,7 +30,7 @@
 
             .show {display: block;}
 
-            .button {
+            .headerButton { /* Knapper i home-headeren */
                 background-color: #41B439;
                 color: white;
                 font-family: monospace;
@@ -40,48 +41,92 @@
                 padding-top: 2vh;
                 padding-bottom: 2vh;
             }
+
+            .dropdownButton { /* Knapp for å åpne dropdownen */
+                background-color: #41B439;
+                color: white;
+                font-family: monospace;
+                font-size: 1.3em;
+                border: 0;
+                cursor: pointer;
+                height: 7vh;
+                padding-top: 2vh;
+                padding-bottom: 2vh;
+            }
+
+            .sidebar { /* Den faktiske sidebaren */
+                height: 93vh;
+                width: 0;
+                position: fixed;
+                background-color: #AB39B4;
+                color: white;
+                overflow-x: hidden;
+                transition: 0.5s;
+            }
+
+            .sidebar .closebtn { /* Knappen for å lukke sidebaren */
+                position: absolute;
+            }
+
+            .openbtn { /* Knapp for å åpne sidebaren*/
+                font-size: 10vh;
+                padding-top: 78vh;
+                padding-left: 15px;
+                cursor: pointer;
+                border: none;
+                z-index: 1;
+            }
+
             #header {
                 height: 7vh;
                 background-color: #41B439;
                 color: white;
             }
-            #box {
+
+            #box1 {
                 height: 7vh;
                 display: flex;
                 flex-grow: 6;
                 flex-direction: row;
                 text-align: center;
             }
+
+            #box2 {
+                height: 7vh;
+                display: flex;
+                flex-grow: 2;
+                flex-direction: row;
+            }
+
             #map {
                 position: absolute;
                 height: 93vh !important;
-                z-index: 1;
             }
         </style>
     </head>
     <body style="padding: 0; margin: 0;">
         <div id="header">
-            <div id="box">
+            <div id="box1">
                 <div style="width: 15vw;"><h1 style="font-family: monospace; font-weight: bolder; padding-top: 1vh;">MyStudyGIS</h1></div>
                 <div style="width: 10vw;">
-                    <button class="button" style="font-weight: bolder;">
+                    <button class="headerButton" onclick="toSokOgFinn()">
                         Søk og finn
                     </button>
                 </div>
                 <div style="width: 10vw;">
-                    <button class="button">
+                    <button class="headerButton" onclick="toINaerheten()">
                         I nærheten
                     </button>
                 </div>
                 <div style="width: 10vw;">
-                    <button class="button">
+                    <button class="headerButton" onclick="toVeibeskrivelse()">
                         Veibeskrivelse
                     </button>
                 </div>
                 <div style="width: 50vw;"></div>
                 <div class="dropdown" style="width: 5vw;">
-                    <button class="button" onclick="myFunction()">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="2vw" height="2vw" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                    <button class="dropdownButton" onclick="myFunction()">
+                        <svg style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg" width="2vw" height="2vw" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                             <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                         </svg>
@@ -94,7 +139,27 @@
                 </div>
             </div>
         </div>
-        <div id="map" style="position: relative;"></div>
+        <div id="mySidebar" class="sidebar" style="z-index: 999;">
+            <div id="box2">
+                <div>
+                    <svg onclick="closeNav()" style="padding-top: 5px; cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="5vh" height="5vh" fill="white" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 style="text-align: center; padding-top: 5px; padding-left: 50px;">Søk og finn</h1>
+                </div>
+            </div>
+        </div>
+        <div id="map" style="position: relative;">
+            <div style="z-index: 999;">
+                <button class="openbtn" style="position: absolute">
+                    <svg class="bi bi-plus-circle-fill" onclick="openNav()" xmlns="http://www.w3.org/2000/svg" width="7vh" height="7vh" fill="#AB39B4" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
     </body>
 </html>
 
@@ -110,7 +175,7 @@
         layers: [osm_map], // Default basiskart
         maxZoom: 18, // Justerer zoom-nivået
         minZoom: 6,
-        zoomControl: false // Fjerner defaul zoom-knapper
+        zoomControl: false // Fjerner default zoom-knapper
     }).setView([63.418529, 10.40284], 13)
 
     // Bestemmer plasseringen av zoom-knappene
@@ -126,7 +191,7 @@
 
     // Close the dropdown if the user clicks outside of it
     window.onclick = function(event) {
-        if (!event.target.matches('.button')) {
+        if (!event.target.matches('.dropdownButton')) {
             var dropdowns = document.getElementsByClassName("dropdown-content");
             var i;
             for (i = 0; i < dropdowns.length; i++) {
@@ -136,6 +201,42 @@
                 }
             }
         }
+    }
+
+    /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
+    function openNav() {
+        document.getElementById("mySidebar").style.width = "20vw";
+    }
+
+    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+    function closeNav() {
+        document.getElementById("mySidebar").style.width = "0";
+    }
+
+    var page = "Søk og finn"; // Konstant som sier hvilken side en er på
+
+    // Funksjoner som justerer hvilken "side" en er på:
+
+    function toSokOgFinn() {
+        page = "Søk og finn";
+    }
+    function toINaerheten() {
+        page = "I nærheten";
+    }
+    function toVeibeskrivelse() {
+        page = "Veibeskrivelse";
+    }
+
+    // Funksjoner som sier om en er på en bestemt "side":
+
+    function paaSokOgFinn() {
+        return page == "Søk og finn";
+    }
+    function paaINaerheten() {
+        return page == "I nærheten";
+    }
+    function paaVeibeskrivelse() {
+        return page == "Veibeskrivelse";
     }
 
 </script>
