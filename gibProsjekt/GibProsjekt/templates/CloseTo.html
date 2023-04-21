@@ -137,9 +137,21 @@
                         </svg>
                     </button>
                     <div id="myDropdown" class="dropdown-content">
-                        <p style="font-family: monospace; font-weight: bold;">Profil</p>
-                        <p style="font-family: monospace; font-weight: bold;">Hjem</p>
-                        <p style="font-family: monospace; font-weight: bold;">Logg ut</p>
+                        <p
+                            style="font-family: monospace; font-weight: bold; cursor: pointer;"
+                            onclick="window.locate.href='http://127.0.0.1:8000/profile/';">
+                            Profil
+                        </p>
+                        <p
+                            style="font-family: monospace; font-weight: bold; cursor: pointer;"
+                            onclick="window.locate.href='http://127.0.0.1:8000/home/';">
+                            Hjem
+                        </p>
+                        <p
+                            style="font-family: monospace; font-weight: bold; cursor: pointer;"
+                            onclick="window.locate.href='http://127.0.0.1:8000/';">
+                            Logg ut
+                        </p>
                     </div>
                 </div>
             </div>
