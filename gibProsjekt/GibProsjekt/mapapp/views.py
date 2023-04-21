@@ -9,6 +9,9 @@ def first_view(request):
 def home(request):
     return render(request, 'HomePage.html')
 
+def closeTo(request):
+    return render(request, 'CloseTo.html')
+
 def registration_view(request):
     print('hallo1')
     if request.method == "POST":
