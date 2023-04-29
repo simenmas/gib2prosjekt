@@ -14,6 +14,12 @@
         {% bootstrap_javascript %}
 
         <style>
+            .a_button {
+                text-decoration: none;
+                background-color: #AB39B4;
+                color: white;
+            }
+
             .dropdown { /* Plassering av dropdown */
                 position: relative;
                 display: block;
@@ -137,9 +143,15 @@
                         </svg>
                     </button>
                     <div id="myDropdown" class="dropdown-content">
-                        <p style="font-family: monospace; font-weight: bold;">Profil</p>
-                        <p style="font-family: monospace; font-weight: bold;">Hjem</p>
-                        <p style="font-family: monospace; font-weight: bold;">Logg ut</p>
+                        <p style="font-family: monospace; font-weight: bold;">
+                            <a class="a_button" href="http://127.0.0.1:8000/profile/">Profil</a>
+                        </p>
+                        <p style="font-family: monospace; font-weight: bold;">
+                            <a class="a_button" href="http://127.0.0.1:8000/home/">Hjem</a>
+                        </p>
+                        <p style="font-family: monospace; font-weight: bold;">
+                            <a class="a_button" href="http://127.0.0.1:8000/">Logg ut</a>
+                        </p>
                     </div>
                 </div>
             </div>
