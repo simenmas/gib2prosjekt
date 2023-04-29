@@ -12,6 +12,9 @@ def home(request):
 def closeTo(request):
     return render(request, 'CloseTo.html')
 
+def profile(request):
+    return render(request, 'ProfilePage.html')
+
 def registration_view(request):
     print('hallo1')
     if request.method == "POST":
