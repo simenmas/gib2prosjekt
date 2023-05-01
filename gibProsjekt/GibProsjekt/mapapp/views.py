@@ -16,20 +16,24 @@ def profile(request):
     return render(request, 'ProfilePage.html')
 
 def registration_view(request):
-    print('hallo1')
     if request.method == "POST":
         form = forms.RegisterNewUser(request.POST)
-        print('hallo')
         if form.is_valid():
-
             form.save()
-
-            print('hallo3')
-
         return redirect("/home")
     else:
-        print('hallo2')
         form = forms.RegisterNewUser()
+        return render(request, "registration/registration.html", {"form": form})
 
+def point_registration_view(request,lat,lng):
+    if request.method == "POST":
+        request.POST = request.POST.copy()
+        form = forms.PointForm(initial={'lat': lat,'lng': lng})
+        form = forms.PointForm(request.POST)
 
+        if form.is_valid():
+            form.save()
+        return redirect("/home")
+    else:
+        form = forms.PointForm()
         return render(request, "registration/registration.html", {"form": form})
