@@ -255,4 +255,18 @@
         document.getElementById("mySidebar").style.width = "0";
     }
 
+    var marker = null;
+
+    function onMapClick(e) {
+        if (marker == null) {
+            marker = L.marker();
+            marker.setLatLng(e.latlng).addTo(map);
+        } else {
+            marker.remove();
+            marker = null;
+        }
+    }
+
+    map.on('click', onMapClick);
+
 </script>
