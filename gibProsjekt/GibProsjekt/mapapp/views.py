@@ -10,11 +10,11 @@ def home(request):
 
     if request.method == "POST":
         print(request.POST)
-        form = forms.PointForm(request.POST)
-        print(form)
-        print(form.is_valid())
+        copy = request.POST.copy()
+        copy['user']=request.user
+        form = forms.PointForm(copy)
         if form.is_valid():
-            print('hallo')
+            print(form.is_valid())
             form.save()
 
     return render(request, 'HomePage.html')
@@ -37,13 +37,3 @@ def registration_view(request):
     else:
         form = forms.RegisterNewUser()
         return render(request, "registration/registration.html", {"form": form})
-
-def point_registration_view(request,lat,lng):
-    if request.method == "POST":
-        request.POST = request.POST.copy()
-        form = forms.PointForm(initial={'lat': lat,'lng': lng})
-        form = forms.PointForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-        return redirect("/home")
