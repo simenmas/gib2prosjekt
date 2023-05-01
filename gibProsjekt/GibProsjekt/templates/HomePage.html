@@ -14,6 +14,8 @@
         {% bootstrap_javascript %}
 
         <style>
+            .kart {text-decoration: none;}
+
             .a_button {
                 text-decoration: none;
                 background-color: #AB39B4;
@@ -85,6 +87,12 @@
 
             .sidebar .closebtn { /* Knappen for å lukke sidebaren */
                 position: absolute;
+            }
+
+            .sidebarButton {
+                background-color: white;
+                color: #AB39B4;
+                border-radius: 15px;
             }
 
             #header {
@@ -184,20 +192,50 @@
                     <input type="checkbox" id="leseplass" name="leseplass" value="Leseplass">
                     <label for="leseplass">Leseplass</label><br>
                 <h4 style="padding-top: 2vh;">Lagrede punkt:</h4>
-
-                
-
             </div>
         </div>
         <div id="addPointSidebar" class="sidebar" style="z-index: 999;">
-            Hei
+            <div id="box2">
+                <div>
+                    <svg onclick="closeAdd()" style="padding-top: 5px; cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="5vh" height="5vh" fill="white" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h2 style="text-align: center; padding-top: 5px; padding-left: 50px;">Lagre nytt punkt</h2>
+                </div>
+            </div>
+            <form action = "" method = "POST">
+                {% csrf_token %}
+                <h5>Tittel:</h5>
+                <input type="text" id="tittel" name="tittel">
+                <h5>Koordinater:</h5>
+                <input type="number" id="lat" name="lat">
+                <input type="number" id="lon" name="lon">
+                <h5>Type:</h5>
+                <select name="type" id="type">
+                    <option value="hjemsted">Hjemsted</option>
+                    <option value="leseplass">Leseplass</option>
+                    <option value="butikk">Butikk</option>
+                    <option vlaue="turplass">Turplass</option>
+                    <option value="utested">Utested</option>
+                </select>
+                <h5>Synlighet:</h5>
+                <select  name="synlighet" id="synlighet">
+                    <option value="privat">Privat</option>
+                    <option value="offentlig">Offentlig</option>
+                </select>
+                <h5>Beskrivelse:</h5>
+                <textarea id="beskrivelse" name="beskrivelse" cols="30" rows="5"></textarea>
+                <button class="sidebarButton" style="width: 5vw; text-align: center;">Lagre</button>
+            </form>
         </div>
         <div id="map" style="position: relative; z-index: 1;">
             <div id="box3">
                 <div style="height: 83vh;"></div>
                 <div id="box2" style="height: 10vh;">
                     <div style="width: 5vw">
-                        <svg class="bi bi-plus-circle-fill" onclick="openNav()"
+                        <svg class="kart bi bi-plus-circle-fill" onclick="openNav()"
                             xmlns="http://www.w3.org/2000/svg" width="8vh" height="8vh"
                             fill="#AB39B4" viewBox="0 0 16 16"
                             style="padding-left: 15px; cursor: pointer; border: none; position: absolute; z-index: 999;">
@@ -205,7 +243,7 @@
                         </svg>
                     </div>
                     <div style="width: 5vw;">
-                        <svg class="bi bi-pin-map-fill" id="AddPoint" onclick="openAdd()"
+                        <svg class="kart bi bi-pin-map-fill" id="AddPoint" onclick="openAdd()"
                             xmlns="http://www.w3.org/2000/svg" width="7vh" height="7vh"
                             fill="#AB39B4" viewBox="0 0 16 16"
                             style="cursor: pointer; border: none; position: absolute; z-index: 999; display: none;">
@@ -239,8 +277,7 @@
         position: 'bottomright'
     }).addTo(map);
 
-    /* When the user clicks on the button, 
-    toggle between hiding and showing the dropdown content */
+    // Åpner dropdownen
     function myFunction() {
         document.getElementById("myDropdown").classList.toggle("show");
     }
@@ -270,11 +307,13 @@
     }
 
     var marker = null;
+    var p = ""
 
     function onMapClick(e) {
         if (marker == null) {
             marker = L.marker();
             marker.setLatLng(e.latlng).addTo(map);
+            p = e.latlng.toString()
             showAdd()
         } else {
             marker.remove();
@@ -282,7 +321,7 @@
             marker = null;
         }
     }
-
+    
     map.on('click', onMapClick);
 
     function showAdd() {
@@ -294,12 +333,15 @@
     }
 
     function openAdd() {
-        document.getElementById("mySidebar").style.width = "20vw";
+        document.getElementById("addPointSidebar").style.width = "20vw";
     }
 
-    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
     function closeAdd() {
-        document.getElementById("mySidebar").style.width = "0";
+        document.getElementById("addPointSidebar").style.width = "0";
+    }
+
+    function getPosition() {
+        return p
     }
 
 </script>
