@@ -87,6 +87,12 @@
                 position: absolute;
             }
 
+            .sidebarButton {
+                background-color: white;
+                color: #AB39B4;
+                border-radius: 15px;
+            }
+
             #header {
                 height: 7vh;
                 background-color: #41B439;
@@ -125,12 +131,12 @@
             <div id="box1">
                 <div style="width: 15vw;"><h1 style="font-family: monospace; font-weight: bolder; padding-top: 1vh;">MyStudyGIS</h1></div>
                 <div style="width: 10vw;">
-                    <button class="boldHeaderButton" onclick="window.location.href='http://127.0.0.1:8000/home/';">
+                    <button class="headerButton" onclick="window.location.href='http://127.0.0.1:8000/home/';">
                         Søk og finn
                     </button>
                 </div>
                 <div style="width: 10vw;">
-                    <button class="headerButton" onclick="window.location.href='http://127.0.0.1:8000/closeto/';">
+                    <button class="boldHeaderButton" onclick="window.location.href='http://127.0.0.1:8000/closeto/';">
                         I nærheten
                     </button>
                 </div>
@@ -164,29 +170,21 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 style="text-align: center; padding-top: 5px; padding-left: 50px;">Søk og finn</h1>
+                    <h1 style="text-align: center; padding-top: 5px; padding-left: 50px;">I nærheten</h1>
                 </div>
             </div>
             <div style="padding-left: 1vw;">
-                <h4>Søk:</h4>
+                <h4>Fra punkt:</h4>
+                <p>Velg punkt:</p>
                 <div style="padding-top: 1vh; padding-bottom: 1vh;">
                     <input type="text" id="tittel" name="tittel"><br>
                 </div>
-                <h4>Filtrer:</h4>
-                <p>Synlighet:</p>
-                    <input type="checkbox" id="offentlig" name="offentlig" value="Offentlig">
-                    <label for="offentlig">Offentlig</label><br>
-                    <input type="checkbox" id="privat" name="privat" value="Privat">
-                    <label for="privat">Privat</label><br>
-                <p>Type:</p>
-                    <input type="checkbox" id="butikk" name="butikk" value="Butikk">
-                    <label for="butikk">Butikk</label><br>
-                    <input type="checkbox" id="leseplass" name="leseplass" value="Leseplass">
-                    <label for="leseplass">Leseplass</label><br>
-                <h4 style="padding-top: 2vh;">Lagrede punkt:</h4>
+                <p>... eller:</p>
+                <button class="sidebarButton">Min posisjon</button>
 
-                
-
+                <h4 style="padding-top: 2vh;">Innenfor radius:</h4>
+                <input type="text" id="avstand" name="avstand"><br>
+                <label for="avstand">Skriv inn antall meter for radiusen.</label>
             </div>
         </div>
         <div id="map" style="position: relative; z-index: 1;">
