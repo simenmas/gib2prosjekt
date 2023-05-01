@@ -12,4 +12,4 @@ class RegisterNewUser(UserCreationForm):
 class PointForm(forms.ModelForm):
     class Meta:
         model = models.Point
-        exclude = ["lat","lon"]
+        exclude = []

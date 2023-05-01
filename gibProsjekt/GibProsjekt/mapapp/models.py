@@ -8,6 +8,7 @@ class Point(models.Model):
     name = models.CharField(max_length=50)
     lat = models.FloatField()
     lon = models.FloatField()
-    desc = models.TextField()
+    description = models.TextField()
 
     category = models.CharField(max_length=50)
+    visibility = models.CharField(max_length=50, default = "Privat")
