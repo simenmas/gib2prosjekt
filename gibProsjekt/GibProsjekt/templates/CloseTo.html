@@ -87,6 +87,12 @@
                 position: absolute;
             }
 
+            .sidebarButton {
+                background-color: white;
+                color: #AB39B4;
+                border-radius: 15px;
+            }
+
             #header {
                 height: 7vh;
                 background-color: #41B439;
@@ -166,6 +172,19 @@
                 <div>
                     <h1 style="text-align: center; padding-top: 5px; padding-left: 50px;">I nærheten</h1>
                 </div>
+            </div>
+            <div style="padding-left: 1vw;">
+                <h4>Fra punkt:</h4>
+                <p>Velg punkt:</p>
+                <div style="padding-top: 1vh; padding-bottom: 1vh;">
+                    <input type="text" id="tittel" name="tittel"><br>
+                </div>
+                <p>... eller:</p>
+                <button class="sidebarButton">Min posisjon</button>
+
+                <h4 style="padding-top: 2vh;">Innenfor radius:</h4>
+                <input type="text" id="avstand" name="avstand"><br>
+                <label for="avstand">Skriv inn antall meter for radiusen.</label>
             </div>
         </div>
         <div id="map" style="position: relative; z-index: 1;">
