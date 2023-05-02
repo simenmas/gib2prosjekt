@@ -30,9 +30,14 @@ def search_and_find(request):
     
         points = Point.objects.filter(name__contains=criteria['tittel'])
   
-        filtered = Point.objects.filter(visibility=criteria['visibility'])
         
-        filtered = filtered.intersection(Point.objects.filter(category=criteria['category']))
+        if criteria['visibility'] != 'alle':
+            filtered = Point.objects.filter(visibility=criteria['visibility'])
+        else:
+            filtered = Point.objects.all()
+        if criteria['category'] != 'alle':
+            filtered = filtered.intersection(Point.objects.filter(category=criteria['category']))
+        
         points = points.intersection(filtered)
         pointcor = list(points.values('lat', 'lon'))
         context = {'points': points, 'pointcor': pointcor}
@@ -42,6 +47,7 @@ def search_and_find(request):
         points = Point.objects.all()
         pointcor = list(points.values('lat', 'lon'))
         context = {'points': points, 'pointcor': pointcor}
+        
     return render(request, 'Homepage.html', context)
 
 
