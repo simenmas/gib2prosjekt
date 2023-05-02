@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'mapapp',
     'leaflet',
     'bootstrap5',
+    'psycopg2',
 ]
 
 
@@ -83,8 +84,12 @@ WSGI_APPLICATION = 'GibProsjekt.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'mystudygis',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'geomatikk.ibm.ntnu.no',
+        'PORT':'5433',
     }
 }
 
