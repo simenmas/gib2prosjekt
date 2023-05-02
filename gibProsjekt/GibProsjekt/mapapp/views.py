@@ -26,15 +26,14 @@ def search_and_find(request):
     if request.method == "POST":
         criteria = request.POST.copy()  # declare a variable for the search criteria
 
-        print(criteria)
-        print(len(criteria))
+    
         points = Point.objects.filter(name__contains=criteria['tittel'])
-        print(points)
+  
         filtered = Point.objects.filter(visibility=criteria['visibility'])
-        print(filtered)
+        
         filtered = filtered.intersection(Point.objects.filter(category=criteria['category']))
         points = points.intersection(filtered)
-        print(points)
+
         """
         criteria.pop('csrfmiddlewaretoken')
         criteria.pop('tittel')
