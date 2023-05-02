@@ -179,30 +179,47 @@
                 </div>
             </div>
             <div style="padding-left: 1vw;">
-                <h4>Søk:</h4>
-                <div style="padding-top: 1vh; padding-bottom: 1vh;">
-                    <input type="text" id="tittel" name="tittel"><br>
-                </div>
-                <h4>Filtrer:</h4>
-                <p>Synlighet:</p>
-                    <input type="checkbox" id="offentlig" name="offentlig" value="Offentlig">
-                    <label for="offentlig">Offentlig</label><br>
-                    <input type="checkbox" id="ForVenner" name="ForVenner" value="For venner">
-                    <label for="ForVenner">For vener</label><br>
-                    <input type="checkbox" id="privat" name="privat" value="Privat">
-                    <label for="privat">Privat</label><br>
-                <p>Type:</p>
-                    <input type="checkbox" id="hjemsted" name="hjemsted" value="Hjemsted">
-                    <label for="hjemsted">Hjemsted</label><br>
-                    <input type="checkbox" id="leseplass" name="leseplass" value="Leseplass">
-                    <label for="leseplass">Leseplass</label><br>
-                    <input type="checkbox" id="butikk" name="butikk" value="Butikk">
-                    <label for="butikk">Butikk</label><br>
-                    <input type="checkbox" id="turplass" name="turplass" value="Turplass">
-                    <label for="turplass">Turplass</label><br>
-                    <input type="checkbox" id="utested" name="utested" value="Utested">
-                    <label for="utested">Utested</label><br>
+                <!-- Form for søk og finn -->
+                <form action="{% url 'search' %}" method="POST">
+                    {% csrf_token %}
+
+                    <h4>Søk:</h4>
+                    <div style="padding-top: 1vh; padding-bottom: 1vh;">
+                        <input type="search" id="tittel" name="tittel"><br>
+                    </div>
+                    <h4>Filtrer:</h4>
+                    <p>Synlighet:</p>
+                         <select  name="visibility" id="visibility">
+                            <option value="alle">Alle</option>
+                            <option value="privat">Privat</option>
+                            <option value="forvenner">For venner</option>
+                            <option value="offentlig">Offentlig</option>
+                        </select>
+                    <p>Type:</p>
+                        <select name="category" id="category">
+                            <option value="alle">Alle</option>
+                            <option value="hjemsted">Hjemsted</option>
+                            <option value="leseplass">Leseplass</option>
+                            <option value="butikk">Butikk</option>
+                            <option vlaue="turplass">Turplass</option>
+                            <option value="utested">Utested</option>
+                        </select>
+                    <br>
+                    <br>
+                    <button class="sidebarButton" style="width: 5vw; text-align: center;" type="submit">Søk</button>
+                </form>
+
                 <h4 style="padding-top: 2vh;">Lagrede punkt:</h4>
+                    <ul>
+                        {% for point in points %}
+                        <li> {{point.name}} </li>
+                        {% endfor %}
+                    </ul>
+
+
+
+                
+
             </div>
         </div>
        <div id="addPointSidebar" class="sidebar" style="z-index: 999;">
@@ -216,7 +233,7 @@
                     <h2 style="text-align: center; padding-top: 5px; padding-left: 50px;">Lagre nytt punkt</h2>
                 </div>
             </div>
-            <form action = "" method = "POST" style="padding-left: 1vw;">
+            <form action = "{% url 'home' %}" method = "POST">
                 {% csrf_token %}
                 <h5>Tittel:</h5>
                 <input type="text" id="name" name="name">
@@ -225,7 +242,7 @@
                 <input type="number" id="lat" name="lat" min = "1" max = "90" step = 0.000000000000000001>
                 <input type="number" id="lon" name="lon" min = "1" max = "90" step = 0.000000000000000001>
                 <h5>Kategorier:</h5>
-                <select name="category" id="category">
+                <select name="category" id="category-search">
                     <option value="hjemsted">Hjemsted</option>
                     <option value="leseplass">Leseplass</option>
                     <option value="butikk">Butikk</option>
@@ -233,7 +250,8 @@
                     <option value="utested">Utested</option>
                 </select>
                 <h5>Synlighet:</h5>
-                <select  name="visibility" id="visibility">
+
+                <select  name="visibility" id="visibility-search">
                     <option value="privat">Privat</option>
                     <option value="ForVenner">For venner</option>
                     <option value="offentlig">Offentlig</option>
@@ -267,6 +285,7 @@
                 </div>
             </div>
         </div>
+        {{ pointcor|json_script:"points_json" }}
     </body>
 </html>
 
@@ -287,6 +306,12 @@
         minZoom: 6,
         zoomControl: false // Fjerner default zoom-knapper
     }).setView([63.418529, 10.40284], 13)
+
+    //Legger til punkter i kartet
+    let points = JSON.parse(document.getElementById("points_json").textContent)
+    points.forEach(point => {
+        L.marker([point.lat, point.lon]).addTo(map)
+    })
 
     // Bestemmer plasseringen av zoom-knappene
     L.control.zoom({
