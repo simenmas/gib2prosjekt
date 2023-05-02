@@ -168,22 +168,42 @@
                 </div>
             </div>
             <div style="padding-left: 1vw;">
-                <h4>Søk:</h4>
-                <div style="padding-top: 1vh; padding-bottom: 1vh;">
-                    <input type="text" id="tittel" name="tittel"><br>
-                </div>
-                <h4>Filtrer:</h4>
-                <p>Synlighet:</p>
-                    <input type="checkbox" id="offentlig" name="offentlig" value="Offentlig">
-                    <label for="offentlig">Offentlig</label><br>
-                    <input type="checkbox" id="privat" name="privat" value="Privat">
-                    <label for="privat">Privat</label><br>
-                <p>Type:</p>
-                    <input type="checkbox" id="butikk" name="butikk" value="Butikk">
-                    <label for="butikk">Butikk</label><br>
-                    <input type="checkbox" id="leseplass" name="leseplass" value="Leseplass">
-                    <label for="leseplass">Leseplass</label><br>
+                <!-- Form for søk og finn -->
+                <form action="{% url 'search' %}" method="POST">
+                    {% csrf_token %}
+
+                    <h4>Søk:</h4>
+                    <div style="padding-top: 1vh; padding-bottom: 1vh;">
+                        <input type="search" id="tittel" name="tittel"><br>
+                    </div>
+                    <h4>Filtrer:</h4>
+                    <p>Synlighet:</p>
+                         <select  name="visibility" id="visibility">
+                            <option value="privat">Privat</option>
+                            <option value="forvenner">For venner</option>
+                            <option value="offentlig">Offentlig</option>
+                        </select>
+                    <p>Type:</p>
+                        <select name="category" id="category">
+                            <option value="hjemsted">Hjemsted</option>
+                            <option value="leseplass">Leseplass</option>
+                            <option value="butikk">Butikk</option>
+                            <option vlaue="turplass">Turplass</option>
+                            <option value="utested">Utested</option>
+                        </select>
+                    <br>
+                    <br>
+                    <button class="sidebarButton" style="width: 5vw; text-align: center;" type="submit">Søk</button>
+                </form>
+
                 <h4 style="padding-top: 2vh;">Lagrede punkt:</h4>
+                    <ul>
+                        {% for point in points %}
+                        <li> {{point.name}} </li>
+                        {% endfor %}
+                    </ul>
+
+
 
                 
 
@@ -200,7 +220,7 @@
                     <h2 style="text-align: center; padding-top: 5px; padding-left: 50px;">Lagre nytt punkt</h2>
                 </div>
             </div>
-            <form action = "" method = "POST">
+            <form action = "{% url 'home' %}" method = "POST">
                 {% csrf_token %}
                 <h5>Tittel:</h5>
                 <input type="text" id="name" name="name">

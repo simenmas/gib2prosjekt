@@ -26,4 +26,5 @@ urlpatterns = [
     path('home/',views.home, name='home'),
     path('closeto/', views.closeTo, name='closeto'),
     path('profile/', views.profile, name='profile'),
+    path('search/',views.search_and_find, name = 'search')
 ]
