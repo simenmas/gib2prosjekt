@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, logout, authenticate
 from mapapp import forms
 from .models import Point
 
@@ -67,3 +67,4 @@ def registration_view(request):
     else:
         form = forms.RegisterNewUser()
         return render(request, "registration/registration.html", {"form": form})
+
