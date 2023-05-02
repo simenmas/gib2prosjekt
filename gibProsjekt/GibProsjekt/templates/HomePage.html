@@ -87,6 +87,12 @@
                 position: absolute;
             }
 
+            .sidebarButton {
+                background-color: white;
+                color: #AB39B4;
+                border-radius: 15px;
+            }
+
             #header {
                 height: 7vh;
                 background-color: #41B439;
@@ -123,7 +129,12 @@
     <body style="padding: 0; margin: 0;">
         <div id="header">
             <div id="box1">
-                <div style="width: 15vw;"><h1 style="font-family: monospace; font-weight: bolder; padding-top: 1vh;">MyStudyGIS</h1></div>
+                <div style="width: 15vw;">
+                    <h1 style="font-family: monospace; font-weight: bolder; padding-top: 1vh; cursor: pointer;"
+                        onclick="window.location.href='http://127.0.0.1:8000/home/';">
+                        MyStudyGIS
+                    </h1>
+                </div>
                 <div style="width: 10vw;">
                     <button class="boldHeaderButton" onclick="window.location.href='http://127.0.0.1:8000/home/';">
                         Søk og finn
@@ -227,6 +238,7 @@
                 <h5>Tittel:</h5>
                 <input type="text" id="name" name="name">
                 <h5>Koordinater:</h5>
+                <p>Klikk i kartet på det punktet du vil lagre.</p>
                 <input type="number" id="lat" name="lat" min = "1" max = "90" step = 0.000000000000000001>
                 <input type="number" id="lon" name="lon" min = "1" max = "90" step = 0.000000000000000001>
                 <h5>Kategorier:</h5>
@@ -243,7 +255,6 @@
                     <option value="privat">Privat</option>
                     <option value="ForVenner">For venner</option>
                     <option value="offentlig">Offentlig</option>
-
                 </select>
                 <h5>Beskrivelse:</h5>
                 <textarea id="description" name="description" cols="30" rows="5"></textarea>
@@ -263,15 +274,13 @@
                         </svg>
                     </div>
                     <div style="width: 5vw;">
-                        <!--<a onclick="location.href = link">-->
-                        <svg class="bi bi-pin-map-fill" id="AddPoint" onclick="openAdd()"
+                        <svg class="bi bi-pin-map-fill" id="AddPoint" onclick="openAdd();event.stopPropagation()"
                             xmlns="http://www.w3.org/2000/svg" width="7vh" height="7vh"
                             fill="#AB39B4" viewBox="0 0 16 16"
-                            style="cursor: pointer; border: none; position: absolute; z-index: 999; display: none;">
+                            style="cursor: pointer; border: none; position: absolute; z-index: 999; display: block;">
                             <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8l3-4z"/>
                             <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"/>
                         </svg>
-
                     </div>
                 </div>
             </div>
@@ -284,7 +293,6 @@
 
     var lat = 0
     var lon = 0
-    var link = 0
 
     // Bestemme URL til basiskartet:
     var osm_map = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -342,41 +350,36 @@
     }
 
     var marker = null;
+    var boolsk =  false;
 
     function onMapClick(e) {
-        if (marker == null) {
-            marker = L.marker();
-            marker.setLatLng(e.latlng).addTo(map);
-            lat = e.latlng.lat
-            lon = e.latlng.lng
-            //link = "PointRegistration/" +lat+"/"+lon+"/"
-            showAdd()
-        } else {
-            marker.remove();
-            hideAdd()
-            marker = null;
+        if (boolsk) {
+            if (marker == null) {
+                marker = L.marker();
+                marker.setLatLng(e.latlng).addTo(map);
+                lat = e.latlng.lat;
+                lon = e.latlng.lng;
+                document.getElementById("lat").value = lat
+                document.getElementById("lon").value = lon
+            } else {
+                marker.remove();
+                marker = null;
+            }
         }
     }
 
     map.on('click', onMapClick);
 
-    function showAdd() {
-        document.getElementById("AddPoint").style.display = "block";
-    }
-
-    function hideAdd() {
-        document.getElementById("AddPoint").style.display = "none";
-    }
-
     function openAdd() {
         document.getElementById("addPointSidebar").style.width = "20vw";
-        document.getElementById("lat").value = lat
-        document.getElementById("lon").value = lon
+        boolsk = true;
     }
 
-    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
     function closeAdd() {
         document.getElementById("addPointSidebar").style.width = "0";
+        boolsk = false;
+        marker.remove();
+        marker = null;
     }
 
 </script>
