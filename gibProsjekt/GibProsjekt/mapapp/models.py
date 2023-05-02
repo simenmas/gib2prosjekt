@@ -14,3 +14,6 @@ class Point(models.Model):
     visibility = models.CharField(max_length=50, default = "Privat")
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together=['name','lat','lon','user']
