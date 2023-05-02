@@ -10,7 +10,8 @@ def first_view(request):
 def home(request):
 
     points = Point.objects.all()
-
+    pointcor = list(points.values('lat','lon'))
+    context = {'points': points, 'pointcor':pointcor}
     if request.method == "POST":  # request.POST is immutable, so we need a copy
         print(request.POST)
         copy = request.POST.copy()
@@ -20,7 +21,7 @@ def home(request):
             print(form.is_valid())
             form.save()
 
-    return render(request, 'HomePage.html',{'points':points})
+    return render(request, 'HomePage.html', context)
 
 def search_and_find(request):
     if request.method == "POST":
@@ -33,25 +34,15 @@ def search_and_find(request):
         
         filtered = filtered.intersection(Point.objects.filter(category=criteria['category']))
         points = points.intersection(filtered)
+        pointcor = list(points.values('lat', 'lon'))
+        context = {'points': points, 'pointcor': pointcor}
 
-        """
-        criteria.pop('csrfmiddlewaretoken')
-        criteria.pop('tittel')
-
-        if criteria:
-            print(criteria[list(criteria.keys())[0]])
-            filtered_points = Point.objects.filter(visibility=criteria[list(criteria.keys())[0]])
-            criteria.pop(list(criteria.keys())[0])
-            for i in criteria:
-                newfilter = Point.objects.filter(criteria[i])
-                filtered_points = filtered_points.intersection(newfilter)
-            points = points.intersection(filtered_points)
-
-        """
 
     else:
         points = Point.objects.all()
-    return render(request, 'Homepage.html', {'points':points})
+        pointcor = list(points.values('lat', 'lon'))
+        context = {'points': points, 'pointcor': pointcor}
+    return render(request, 'Homepage.html', context)
 
 
 def closeTo(request):
