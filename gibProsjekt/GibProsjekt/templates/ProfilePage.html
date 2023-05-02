@@ -136,6 +136,7 @@
                 </div>
             </div>
         </div>
+     
         <div id="box2">
             <div id="box3" style="height: 20vh; width: 50vw;">
                 <svg xmlns="http://www.w3.org/2000/svg" 
@@ -147,14 +148,12 @@
                 </svg>
                 <div id="box3">
                     <div style="margin-top: 5vh; margin-left: 2vw; font-weight: bold; text-align: left;">
-                        <h4>Navn:</h4>
                         <h4>Brukernavn:</h4>
                         <h4>E-post:</h4>
                     </div>
                     <div style="margin-top: 5vh; text-align: right; width: calc((50vw-10vh)*0.7);">
-                        <h4>Ola Nordmann</h4>
-                        <h4>Test testesen</h4>
-                        <h4>geomatikk.NTNU@GIS.no</h4>
+                        <h4>{{request.user.get_username}}</h4>
+                        <h4>{{request.user.email}}</h4>
                     </div>
                 </div>
             </div>
