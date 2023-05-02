@@ -5,7 +5,11 @@ from .models import Point
 
 # Create your views here.
 def first_view(request):
-    return render(request, 'StartPage.html')
+    if not request.user.is_authenticated:
+
+        return render(request, 'StartPage.html')
+    else:
+        return redirect("/home")
 
 def home(request):
     if request.user.is_authenticated:
@@ -35,7 +39,10 @@ def search_and_find(request):
     
             
             if criteria['visibility'] != 'alle':
-                filtered = Point.objects.filter(visibility=criteria['visibility'])
+                if criteria['visibility'] == 'privat':
+                    filtered = Point.objects.filter(user=request.user)
+                else:    
+                    filtered = Point.objects.filter(visibility=criteria['visibility'])
             else:
                 filtered = Point.objects.all()
             if criteria['category'] != 'alle':
@@ -64,31 +71,10 @@ def closeTo(request):
 
 def profile(request):
     if request.user.is_authenticated:
-        if request.method == "POST":
-            criteria = request.POST.copy()  # declare a variable for the search criteria
-
-        
-            points = Point.objects.filter(name__contains=criteria['tittel'])
-    
-            
-            if criteria['visibility'] != 'alle':
-                filtered = Point.objects.filter(visibility=criteria['visibility'])
-            else:
-                filtered = Point.objects.all()
-            if criteria['category'] != 'alle':
-                filtered = filtered.intersection(Point.objects.filter(category=criteria['category']))
-            
-            points = points.intersection(filtered)
+            points = Point.objects.filter(user=request.user)
             pointcor = list(points.values('lat', 'lon'))
             context = {'points': points, 'pointcor': pointcor}
-
-
-        else:
-            points = Point.objects.all()
-            pointcor = list(points.values('lat', 'lon'))
-            context = {'points': points, 'pointcor': pointcor}
-            
-        return render(request, 'ProfilePage.html', context)
+            return render(request, 'ProfilePage.html', context)
     else:
         return redirect("/")
 
