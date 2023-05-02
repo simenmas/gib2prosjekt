@@ -48,7 +48,7 @@ def search_and_find(request):
         pointcor = list(points.values('lat', 'lon'))
         context = {'points': points, 'pointcor': pointcor}
         
-    return render(request, 'Homepage.html', context)
+    return render(request, 'HomePage.html', context)
 
 
 def closeTo(request):
