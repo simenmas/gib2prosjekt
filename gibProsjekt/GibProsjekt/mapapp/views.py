@@ -121,6 +121,15 @@ def closeTo(request):
     return render(request, 'CloseTo.html', context)
 
 
+def directions(request):
+    if request.user.is_authenticated:
+        points = Point.objects.all()
+        pointcor = list(points.values('lat','lon'))
+        context = {'points': points, 'pointcor':pointcor}
+        return render(request, 'Directions.html', context)
+    else: 
+        return redirect("/")
+
 def profile(request):
     if request.user.is_authenticated:
             points = Point.objects.filter(user=request.user)

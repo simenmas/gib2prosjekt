@@ -4,6 +4,10 @@
 <html lang="en">
     {% load leaflet_tags %}
     <head>
+
+        <!-- Leaflet routing machine -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
         <meta charset="UTF-8">
         <title>MyStudyGIS</title>
 
@@ -102,7 +106,7 @@
             #box1 {
                 height: 7vh;
                 display: flex;
-                flex-grow: 5;
+                flex-grow: 6;
                 flex-direction: row;
                 text-align: center;
             }
@@ -125,10 +129,6 @@
                 height: 93vh !important;
             }
         </style>
-
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@[VERSION]/dist/L.Control.Locate.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@[VERSION]/dist/L.Control.Locate.min.js" charset="utf-8"></script>
-
     </head>
     <body style="padding: 0; margin: 0;">
         <div id="header">
@@ -140,7 +140,7 @@
                     </h1>
                 </div>
                 <div style="width: 10vw;">
-                    <button class="boldHeaderButton" onclick="window.location.href='http://127.0.0.1:8000/home/';">
+                    <button class="headerButton" onclick="window.location.href='http://127.0.0.1:8000/home/';">
                         Søk og finn
                     </button>
                 </div>
@@ -150,7 +150,7 @@
                     </button>
                 </div>
                 <div style="width: 10vw;">
-                    <button class="headerButton" onclick="window.location.href='http://127.0.0.1:8000/directions/';">
+                    <button class="boldHeaderButton" onclick="window.location.href='http://127.0.0.1:8000/directions/';">
                         Veibeskrivelse
                     </button>
                 </div>
@@ -184,106 +184,53 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 style="text-align: center; padding-top: 5px; padding-left: 50px;">Søk og finn</h1>
+                    <h1 style="text-align: center; padding-left: 10px;">Veibeskrivelse</h1>
                 </div>
             </div>
             <div style="padding-left: 1vw;">
-                <!-- Form for søk og finn -->
-                <form action="{% url 'search' %}" method="POST">
-                    {% csrf_token %}
-
-                    <h4>Søk:</h4>
-                    <div style="padding-top: 1vh; padding-bottom: 1vh;">
-                        <input type="search" id="tittel" name="tittel"><br>
-                    </div>
-                    <h4>Filtrer:</h4>
-                    <p>Synlighet:</p>
-                         <select  name="visibility" id="visibility">
-                            <option value="alle">Alle</option>
-                            <option value="privat">Privat</option>
-                            <option value="forvenner">For venner</option>
-                            <option value="offentlig">Offentlig</option>
-                        </select>
-                    <p>Type:</p>
-                        <select name="category" id="category">
-                            <option value="alle">Alle</option>
-                            <option value="hjemsted">Hjemsted</option>
-                            <option value="leseplass">Leseplass</option>
-                            <option value="butikk">Butikk</option>
-                            <option vlaue="turplass">Turplass</option>
-                            <option value="utested">Utested</option>
-                        </select>
-                    <br>
-                    <br>
-                    <button class="sidebarButton" style="width: 5vw; text-align: center;" type="submit">Søk</button>
-                </form>
-
-                <h4 style="padding-top: 2vh;">Lagrede punkt:</h4>
-                <ul>
-                    {% for point in points %}
-                    <li> {{point.name}} </li>
-                    {% endfor %}
-                </ul>
+                <!-- Input koordinater -->
             </div>
-        </div>
-       <div id="addPointSidebar" class="sidebar" style="z-index: 999;">
-            <div id="box2">
-                <div>
-                    <svg onclick="closeAdd()" style="padding-top: 5px; cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="5vh" height="5vh" fill="white" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-                    </svg>
+            <div style="padding-left: 1vw;">
+                <h4>Fra punkt:</h4>
+                <p>Trykk i kartet for å velge startpunkt:</p>
+                <div style="padding-top: 1vh; padding-bottom: 1vh;">
+                    <input type="number" id="lat1" name="lat1"><br>
+                    <input type="number" id="lon1" name="lon1"><br>
                 </div>
-                <div>
-                    <h2 style="text-align: center; padding-top: 5px; padding-left: 50px;">Lagre nytt punkt</h2>
-                </div>
+                <p>Når du er fornøyd med startpunktet, trykk 'OK'.</p>
+                <button class="sidebarButton" onclick="haveFrom()">
+                    OK
+                </button>
             </div>
-            <form action = "{% url 'home' %}" method = "POST">
-                {% csrf_token %}
-                <h5>Tittel:</h5>
-                <input type="text" id="name" name="name">
-                <h5>Koordinater:</h5>
-                <p>Klikk i kartet på det punktet du vil lagre.</p>
-                <input type="number" id="lat" name="lat" min = "1" max = "90" step = 0.000000000000000001>
-                <input type="number" id="lon" name="lon" min = "1" max = "90" step = 0.000000000000000001>
-                <h5>Kategorier:</h5>
-                <select name="category" id="category-search">
-                    <option value="hjemsted">Hjemsted</option>
-                    <option value="leseplass">Leseplass</option>
-                    <option value="butikk">Butikk</option>
-                    <option vlaue="turplass">Turplass</option>
-                    <option value="utested">Utested</option>
-                </select>
-                <h5>Synlighet:</h5>
-
-                <select  name="visibility" id="visibility-search">
-                    <option value="privat">Privat</option>
-                    <option value="ForVenner">For venner</option>
-                    <option value="offentlig">Offentlig</option>
-                </select>
-                <h5>Beskrivelse:</h5>
-                <textarea id="description" name="description" cols="30" rows="5"></textarea>
-                <button class="sidebarButton" style="width: 5vw; text-align: center;" type="submit">Lagre</button>
-            </form>
+            <div style="padding-left: 1vw;">
+                <h4 style="padding-top: 1vh;">Til punkt:</h4>
+                <p>Velg destinasjonspunkt ved å trykke i kartet:</p>
+                <div style="padding-top: 1vh; padding-bottom: 1vh;">
+                    <input type="number" id="lat2" name="lat2"><br>
+                    <input type="number" id="lon2" name="lon2"><br>
+                </div>
+                <p>Når du er fornøyd med sluttpunktet, trykk 'OK'.</p>
+                <button class="sidebarButton" onclick="haveTo()">
+                    OK
+                </button>
+                <p style="padding-top: 1vh;">Når både start- og sluttpunkt er bestemt, trykk 'Lag rute':</p>
+                <button class="sidebarButton" onclick="makeRoute()">Lag rute</button>
+                <p style="padding-top: 1vh;">Trykk 'Reset' for å nullstille veivalget:</p>
+                <button class="sidebarButton" onclick="Reset()">
+                    Reset
+                </button>
+            </div>
         </div>
         <div id="map" style="position: relative; z-index: 1;">
             <div id="box3">
                 <div style="height: 83vh;"></div>
                 <div id="box2" style="height: 10vh;">
                     <div style="width: 5vw">
-                        <svg class="bi bi-plus-circle-fill" onclick="openNav()"
+                        <svg class="bi bi-plus-circle-fill" onclick="openNav();event.stopPropagation()"
                             xmlns="http://www.w3.org/2000/svg" width="8vh" height="8vh"
                             fill="#AB39B4" viewBox="0 0 16 16"
                             style="padding-left: 15px; cursor: pointer; border: none; position: absolute; z-index: 999;">
                             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                        </svg>
-                    </div>
-                    <div style="width: 5vw;">
-                        <svg class="bi bi-pin-map-fill" id="AddPoint" onclick="openAdd();event.stopPropagation()"
-                            xmlns="http://www.w3.org/2000/svg" width="7vh" height="7vh"
-                            fill="#AB39B4" viewBox="0 0 16 16"
-                            style="cursor: pointer; border: none; position: absolute; z-index: 999; display: block;">
-                            <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8l3-4z"/>
-                            <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"/>
                         </svg>
                     </div>
                 </div>
@@ -293,10 +240,18 @@
     </body>
 </html>
 
+<!-- Leaflet routing machine -->
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
 <script type="text/javascript">
 
-    var lat = 0
-    var lon = 0
+    var boolsk = false
+    var punkt1 = false
+    var punkt2 = false
+    var lat_from = 0
+    var lon_from = 0
+    var lat_to = 0
+    var lon_to = 0
 
     // Bestemme URL til basiskartet:
     var osm_map = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -316,6 +271,63 @@
     points.forEach(point => {
         L.marker([point.lat, point.lon]).addTo(map)
     })
+
+    // Routing Machine
+    var marker
+    map.on('click', function(e) {
+        if (boolsk && !punkt1) {
+            console.log(e);
+            lat_from = e.latlng.lat;
+            lon_from = e.latlng.lng;
+            document.getElementById("lat1").value = lat_from;
+            document.getElementById("lon1").value = lon_from;
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            marker = new L.marker([lat_from, lon_from]).addTo(map);
+        }
+    });
+
+    var marker2
+    map.on('click', function(e) {
+        if (boolsk && punkt1 && !punkt2) {
+            console.log(e);
+            lat_to = e.latlng.lat;
+            lon_to = e.latlng.lng;
+            document.getElementById("lat2").value = lat_from;
+            document.getElementById("lon2").value = lon_from;
+            if (marker2) {
+                map.removeLayer(marker2);
+            }
+            marker2 = new L.marker([lat_to, lon_to]).addTo(map);
+        }
+    });
+
+    var Route;
+
+    function makeRoute() {
+        if (boolsk && punkt1 && punkt2) {
+            Route = new L.Routing.control({
+                waypoints: [
+                    L.latLng(lat_from, lon_from),
+                    L.latLng(lat_to, lon_to)
+                ]
+            }).addTo(map);
+        }
+    };
+
+    // Reset-funksjon for veibeskrivelse
+    function Reset() {
+        punkt1 = false;
+        punkt2 = false;
+        document.getElementById("lat1").value = null
+        document.getElementById("lon1").value = null
+        document.getElementById("lat2").value = null
+        document.getElementById("lon2").value = null
+        map.removeLayer(marker);
+        map.removeLayer(marker2);
+        map.removeControl(Route);
+    }
 
     // Bestemmer plasseringen av zoom-knappene
     L.control.zoom({
@@ -343,47 +355,26 @@
         }
     }
 
+
+
     /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
     function openNav() {
         document.getElementById("mySidebar").style.width = "20vw";
+        boolsk = true;
     }
 
     /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
     function closeNav() {
         document.getElementById("mySidebar").style.width = "0";
-    }
-
-    var marker = null;
-    var boolsk =  false;
-
-    function onMapClick(e) {
-        if (boolsk) {
-            if (marker == null) {
-                marker = L.marker();
-                marker.setLatLng(e.latlng).addTo(map);
-                lat = e.latlng.lat;
-                lon = e.latlng.lng;
-                document.getElementById("lat").value = lat
-                document.getElementById("lon").value = lon
-            } else {
-                marker.remove();
-                marker = null;
-            }
-        }
-    }
-
-    map.on('click', onMapClick);
-
-    function openAdd() {
-        document.getElementById("addPointSidebar").style.width = "20vw";
-        boolsk = true;
-    }
-
-    function closeAdd() {
-        document.getElementById("addPointSidebar").style.width = "0";
         boolsk = false;
-        marker.remove();
-        marker = null;
+    }
+
+    function haveFrom() {
+        punkt1 = true
+    }
+    
+    function haveTo() {
+        punkt2 = true
     }
 
 </script>
