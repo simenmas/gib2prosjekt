@@ -1,3 +1,4 @@
+
 {% load static %}
 
 <!DOCTYPE html>
@@ -130,12 +131,13 @@
                             <a class="a_button" href="http://127.0.0.1:8000/home/">Hjem</a>
                         </p>
                         <p style="font-family: monospace; font-weight: bold;">
-                            <a class="a_button" href="http://127.0.0.1:8000/">Logg ut</a>
+                            <a class="a_button" href="http://127.0.0.1:8000/accounts/logout">Logg ut</a>
                         </p>
                     </div>
                 </div>
             </div>
         </div>
+     
         <div id="box2">
             <div id="box3" style="height: 20vh; width: 50vw;">
                 <svg xmlns="http://www.w3.org/2000/svg" 
@@ -147,20 +149,17 @@
                 </svg>
                 <div id="box3">
                     <div style="margin-top: 5vh; margin-left: 2vw; font-weight: bold; text-align: left;">
-                        <h4>Navn:</h4>
                         <h4>Brukernavn:</h4>
-                        <h4>E-post:</h4>
                     </div>
                     <div style="margin-top: 5vh; text-align: right; width: calc((50vw-10vh)*0.7);">
-                        <h4>Ola Nordmann</h4>
-                        <h4>Test testesen</h4>
-                        <h4>geomatikk.NTNU@GIS.no</h4>
+                        <h4>{{request.user.get_username}}</h4>
                     </div>
                 </div>
             </div>
             <h4 style="font-weight: bold; height: 5vh; margin: 0;">Mine punkt:</h4>
             <div id="map" style="position: relative;"></div>
         </div>
+        {{ pointcor|json_script:"points_json" }}
     </body>
 </html>
 
@@ -172,17 +171,25 @@
     });
 
     // Initialiserer kartet:
-    var map = L.map('map', {
+    var profilemap = L.map('map', {
         layers: [osm_map], // Default basiskart
         maxZoom: 18, // Justerer zoom-nivået
         minZoom: 6,
         zoomControl: false // Fjerner default zoom-knapper
     }).setView([63.418529, 10.40284], 13)
 
+     //Legger til punkter i kartet
+     let points = JSON.parse(document.getElementById("points_json").textContent)
+    points.forEach(point => {
+        L.marker([point.lat, point.lon]).addTo(profilemap)
+    })
+
+
     // Bestemmer plasseringen av zoom-knappene
     L.control.zoom({
         position: 'bottomright'
-    }).addTo(map);
+    }).addTo(profilemap);
+
 
     /* When the user clicks on the button, 
     toggle between hiding and showing the dropdown content */
