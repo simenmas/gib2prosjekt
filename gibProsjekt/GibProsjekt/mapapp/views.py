@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from mapapp import forms
 from .models import Point
+from django.db import connection
+
+
 
 # Create your views here.
 def first_view(request):
@@ -17,12 +20,12 @@ def home(request):
         pointcor = list(points.values('lat','lon'))
         context = {'points': points, 'pointcor':pointcor}
         if request.method == "POST":  # request.POST is immutable, so we need a copy
-            print(request.POST)
+            
             copy = request.POST.copy()
             copy['user']=request.user  # adds the user to the dictionary so all points registers which user made the point
             form = forms.PointForm(copy)
             if form.is_valid():
-                print(form.is_valid())
+               
                 form.save()
 
         return render(request, 'HomePage.html', context)
@@ -64,22 +67,50 @@ def search_and_find(request):
 
 
 def closeTo(request):
-    if request.user.is_authenticated:
-        points = Point.objects.all()
-        pointcor = list(points.values('lat','lon'))
-        context = {'points': points, 'pointcor':pointcor}
-        if request.method == "POST":  # request.POST is immutable, so we need a copy
-            print(request.POST)
-            copy = request.POST.copy()
-            copy['user']=request.user  # adds the user to the dictionary so all points registers which user made the point
-            form = forms.PointForm(copy)
-            if form.is_valid():
-                print(form.is_valid())
-                form.save()
+    if request.method == 'POST':
+        
+        copy = request.POST.copy()
 
-        return render(request, 'CloseTo.html', context)
+        lat = copy['lat']
+        lon = copy['lon']
+        if copy['avstand']:
+            radius = copy['avstand']
+        else:
+            radius = 0
+
+        if copy['tittel']:
+            point = Point.objects.get(name=copy['tittel'])
+            lat = point.lat
+            lon = point.lon
+
+        cursor = connection.cursor()
+
+        cursor.execute(f"SELECT name, lat, lon FROM mapapp_point WHERE ST_DWithin('POINT({lon} {lat})'::geography, ST_MakePoint(lon,lat), {radius})")
+        result = cursor.fetchall()
+
+        lats = []
+        lons = []
+        for i in result:
+            lats.append(i[1])
+            lons.append(i[2])
+        point_lat = Point.objects.filter(lat__in=lats)
+        point_lon = Point.objects.filter(lon__in=lons)
+        points = point_lat.intersection(point_lon)
+
+        if copy['category'] != 'alle':
+            points = points.intersection(Point.objects.filter(category=copy['category']))
+        
+        points = points.intersection(Point.objects.exclude(name=copy['tittel']))
+        pointcor = list(points.values('lat', 'lon'))
+        context = {'points': points, 'pointcor': pointcor}
+
     else:
-        return redirect("/")
+        points = Point.objects.all()
+        pointcor = list(points.values('lat', 'lon'))
+        context = {'points': points, 'pointcor': pointcor}
+
+    return render(request, 'CloseTo.html', context)
+
 
 def profile(request):
     if request.user.is_authenticated:
