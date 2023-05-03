@@ -125,6 +125,10 @@
                 height: 93vh !important;
             }
         </style>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.79.0/dist/L.Control.Locate.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.79.0/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+
     </head>
     <body style="padding: 0; margin: 0;">
         <div id="header">
@@ -179,17 +183,44 @@
                 </div>
             </div>
             <div style="padding-left: 1vw;">
-                <h4>Fra punkt:</h4>
-                <p>Velg punkt:</p>
-                <div style="padding-top: 1vh; padding-bottom: 1vh;">
-                    <input type="text" id="tittel" name="tittel"><br>
-                </div>
-                <p>... eller:</p>
-                <button class="sidebarButton">Min posisjon</button>
 
-                <h4 style="padding-top: 2vh;">Innenfor radius:</h4>
-                <input type="text" id="avstand" name="avstand"><br>
-                <label for="avstand">Skriv inn antall meter for radiusen.</label>
+                <!-- Here is the form for "I Nærheten" -->
+
+                <form action = "{% url 'closeto' %}" method = "POST" style="padding-left: 1vw;">
+                    {% csrf_token %}
+                    <h4>Fra punkt:</h4>
+
+                    <p>Søk etter punkt:</p>
+                    <div style="padding-top: 1vh; padding-bottom: 1vh;">
+                        <input type="text" id="tittel" name="tittel"><br>
+                    </div>
+                    <p>Velg punkt:</p>
+                    <input type="number" id="latclose" name="lat" min = "1" max = "90" step = 0.000000000000000001>
+                    <input type="number" id="lonclose" name="lon" min = "1" max = "90" step = 0.000000000000000001>
+                    <p>... eller:</p>
+                    <button class="sidebarButton" onclick="LocateUser()" type="button">Min posisjon</button>
+                    <h4 style="padding-top: 2vh;">Type:</h4>
+                    <select name="category" id="category2">
+                        <option value="hjemsted">Hjemsted</option>
+                        <option value="leseplass">Leseplass</option>
+                        <option value="butikk">Butikk</option>
+                        <option vlaue="turplass">Turplass</option>
+                        <option value="utested">Utested</option>
+                    </select>
+                    <h4 style="padding-top: 2vh;">Innenfor radius:</h4>
+                    <input type="text" id="avstand" name="avstand"><br>
+                    <label for="avstand">Skriv inn antall meter for radiusen.</label>
+                    <div style="padding-top: 1vh;">
+                        <button class="sidebarButton" style="width: 5vw; text-align: center;" type="submit">Søk</button>
+                </form>
+                <h4 style="padding-top: 2vh;">Punkter i radius</h4>
+                    <ul>
+                        {% for point in points %}
+                        <li> {{point.name}} </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
             </div>
         </div>
        <div id="addPointSidebar" class="sidebar" style="z-index: 999;">
@@ -255,6 +286,7 @@
                 </div>
             </div>
         </div>
+        {{ pointcor|json_script:"points_json" }}
     </body>
 </html>
 
@@ -269,23 +301,32 @@
     });
 
     // Initialiserer kartet:
-    var map = L.map('map', {
+    var closeToMap = L.map('map', {
         layers: [osm_map], // Default basiskart
         maxZoom: 18, // Justerer zoom-nivået
         minZoom: 6,
         zoomControl: false // Fjerner default zoom-knapper
     }).setView([63.418529, 10.40284], 13)
 
+
+    //Legger til punkter i kartet
+    let points = JSON.parse(document.getElementById("points_json").textContent)
+    points.forEach(point => {
+        L.marker([point.lat, point.lon]).addTo(closeToMap)
+    })
+
     // Bestemmer plasseringen av zoom-knappene
     L.control.zoom({
         position: 'bottomright'
-    }).addTo(map);
+    }).addTo(closeToMap);
 
     /* When the user clicks on the button,
     toggle between hiding and showing the dropdown content */
     function myFunction() {
         document.getElementById("myDropdown").classList.toggle("show");
     }
+
+
 
 
     // Close the dropdown if the user clicks outside of it
@@ -302,28 +343,49 @@
         }
     }
 
+    var marker = null;
+    var boolsk =  false;
+
+    function LocateUser() { // This function finds the latlng of the user with the leaflet.locate plugin.
+        closeToMap.locate()
+        .on('locationfound', function(e){
+
+            if (marker != null) {
+                marker.remove()
+            }
+            marker = L.marker([e.latitude, e.longitude]).addTo(closeToMap)  // adds the marker
+            document.getElementById("latclose").value = e.latlng.lat
+            document.getElementById("lonclose").value = e.latlng.lng  // Updates the coordinates in the sidebar form
+
+        })
+       .on('locationerror', function(e){
+            console.log(e);
+            alert("Location access denied.");
+        });  // If user refuses location access
+    }
+
     /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
     function openNav() {
         document.getElementById("mySidebar").style.width = "20vw";
+        boolsk = true;
     }
 
     /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
     function closeNav() {
         document.getElementById("mySidebar").style.width = "0";
+        boolsk = false;
+        marker.remove();
+        marker = null;
     }
 
-    var marker = null;
-    var boolsk =  false;
-
     function onMapClick(e) {
+        console.log(boolsk)
         if (boolsk) {
             if (marker == null) {
                 marker = L.marker();
-                marker.setLatLng(e.latlng).addTo(map);
-                lat = e.latlng.lat;
-                lon = e.latlng.lng;
-                document.getElementById("lat").value = lat
-                document.getElementById("lon").value = lon
+                marker.setLatLng(e.latlng).addTo(closeToMap);
+                document.getElementById("latclose").value = e.latlng.lat
+                document.getElementById("lonclose").value = e.latlng.lng
             } else {
                 marker.remove();
                 marker = null;
@@ -331,7 +393,7 @@
         }
     }
 
-    map.on('click', onMapClick);
+    closeToMap.on('click', onMapClick);
 
     function openAdd() {
         document.getElementById("addPointSidebar").style.width = "20vw";
