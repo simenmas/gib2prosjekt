@@ -52,7 +52,19 @@ def search_and_find(request):
 
 
 def closeTo(request):
-    return render(request, 'CloseTo.html')
+    points = Point.objects.all()
+    pointcor = list(points.values('lat','lon'))
+    context = {'points': points, 'pointcor':pointcor}
+    if request.method == "POST":  # request.POST is immutable, so we need a copy
+        print(request.POST)
+        copy = request.POST.copy()
+        copy['user']=request.user  # adds the user to the dictionary so all points registers which user made the point
+        form = forms.PointForm(copy)
+        if form.is_valid():
+            print(form.is_valid())
+            form.save()
+
+    return render(request, 'CloseTo.html', context)
 
 def profile(request):
     return render(request, 'ProfilePage.html')
