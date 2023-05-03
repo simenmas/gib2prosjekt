@@ -4,6 +4,10 @@
 <html lang="en">
     {% load leaflet_tags %}
     <head>
+
+        <!-- Leaflet routing machine -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
         <meta charset="UTF-8">
         <title>MyStudyGIS</title>
 
@@ -146,7 +150,7 @@
                     </button>
                 </div>
                 <div style="width: 10vw;">
-                    <button class="boldheaderButton" onclick="window.location.href='http://127.0.0.1:8000/directions/';">
+                    <button class="boldHeaderButton" onclick="window.location.href='http://127.0.0.1:8000/directions/';">
                         Veibeskrivelse
                     </button>
                 </div>
@@ -180,39 +184,41 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 style="text-align: center; padding-top: 5px; padding-left: 50px;">Veibeskrivelse</h1>
+                    <h1 style="text-align: center; padding-left: 10px;">Veibeskrivelse</h1>
                 </div>
             </div>
             <div style="padding-left: 1vw;">
-                <!-- Form for søk og finn -->
-                <form action="{% url 'search' %}" method="POST">
-                    {% csrf_token %}
-
-                    <h4>Søk:</h4>
-                    <div style="padding-top: 1vh; padding-bottom: 1vh;">
-                        <input type="search" id="tittel" name="tittel"><br>
-                    </div>
-                    <h4>Filtrer:</h4>
-                    <p>Synlighet:</p>
-                         <select  name="visibility" id="visibility">
-                            <option value="alle">Alle</option>
-                            <option value="privat">Privat</option>
-                            <option value="forvenner">For venner</option>
-                            <option value="offentlig">Offentlig</option>
-                        </select>
-                    <p>Type:</p>
-                        <select name="category" id="category">
-                            <option value="alle">Alle</option>
-                            <option value="hjemsted">Hjemsted</option>
-                            <option value="leseplass">Leseplass</option>
-                            <option value="butikk">Butikk</option>
-                            <option vlaue="turplass">Turplass</option>
-                            <option value="utested">Utested</option>
-                        </select>
-                    <br>
-                    <br>
-                    <button class="sidebarButton" style="width: 5vw; text-align: center;" type="submit">Søk</button>
-                </form>
+                <!-- Input koordinater -->
+            </div>
+            <div style="padding-left: 1vw;">
+                <h4>Fra punkt:</h4>
+                <p>Trykk i kartet for å velge startpunkt:</p>
+                <div style="padding-top: 1vh; padding-bottom: 1vh;">
+                    <input type="number" id="lat1" name="lat1"><br>
+                    <input type="number" id="lon1" name="lon1"><br>
+                </div>
+                <p>Når du er fornøyd med startpunktet, trykk 'OK'.</p>
+                <button class="sidebarButton" onclick="haveFrom()">
+                    OK
+                </button>
+            </div>
+            <div style="padding-left: 1vw;">
+                <h4 style="padding-top: 1vh;">Til punkt:</h4>
+                <p>Velg destinasjonspunkt ved å trykke i kartet:</p>
+                <div style="padding-top: 1vh; padding-bottom: 1vh;">
+                    <input type="number" id="lat2" name="lat2"><br>
+                    <input type="number" id="lon2" name="lon2"><br>
+                </div>
+                <p>Når du er fornøyd med sluttpunktet, trykk 'OK'.</p>
+                <button class="sidebarButton" onclick="haveTo()">
+                    OK
+                </button>
+                <p style="padding-top: 1vh;">Når både start- og sluttpunkt er bestemt, trykk 'Lag rute':</p>
+                <button class="sidebarButton" onclick="makeRoute()">Lag rute</button>
+                <p style="padding-top: 1vh;">Trykk 'Reset' for å nullstille veivalget:</p>
+                <button class="sidebarButton" onclick="Reset()">
+                    Reset
+                </button>
             </div>
         </div>
         <div id="map" style="position: relative; z-index: 1;">
@@ -220,7 +226,7 @@
                 <div style="height: 83vh;"></div>
                 <div id="box2" style="height: 10vh;">
                     <div style="width: 5vw">
-                        <svg class="bi bi-plus-circle-fill" onclick="openNav()"
+                        <svg class="bi bi-plus-circle-fill" onclick="openNav();event.stopPropagation()"
                             xmlns="http://www.w3.org/2000/svg" width="8vh" height="8vh"
                             fill="#AB39B4" viewBox="0 0 16 16"
                             style="padding-left: 15px; cursor: pointer; border: none; position: absolute; z-index: 999;">
@@ -234,10 +240,18 @@
     </body>
 </html>
 
+<!-- Leaflet routing machine -->
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
 <script type="text/javascript">
 
-    var lat = 0
-    var lon = 0
+    var boolsk = false
+    var punkt1 = false
+    var punkt2 = false
+    var lat_from = 0
+    var lon_from = 0
+    var lat_to = 0
+    var lon_to = 0
 
     // Bestemme URL til basiskartet:
     var osm_map = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -257,6 +271,63 @@
     points.forEach(point => {
         L.marker([point.lat, point.lon]).addTo(map)
     })
+
+    // Routing Machine
+    var marker
+    map.on('click', function(e) {
+        if (boolsk && !punkt1) {
+            console.log(e);
+            lat_from = e.latlng.lat;
+            lon_from = e.latlng.lng;
+            document.getElementById("lat1").value = lat_from;
+            document.getElementById("lon1").value = lon_from;
+            if (marker) {
+                map.removeLayer(marker);
+            }
+            marker = new L.marker([lat_from, lon_from]).addTo(map);
+        }
+    });
+
+    var marker2
+    map.on('click', function(e) {
+        if (boolsk && punkt1 && !punkt2) {
+            console.log(e);
+            lat_to = e.latlng.lat;
+            lon_to = e.latlng.lng;
+            document.getElementById("lat2").value = lat_from;
+            document.getElementById("lon2").value = lon_from;
+            if (marker2) {
+                map.removeLayer(marker2);
+            }
+            marker2 = new L.marker([lat_to, lon_to]).addTo(map);
+        }
+    });
+
+    var Route;
+
+    function makeRoute() {
+        if (boolsk && punkt1 && punkt2) {
+            Route = new L.Routing.control({
+                waypoints: [
+                    L.latLng(lat_from, lon_from),
+                    L.latLng(lat_to, lon_to)
+                ]
+            }).addTo(map);
+        }
+    };
+
+    // Reset-funksjon for veibeskrivelse
+    function Reset() {
+        punkt1 = false;
+        punkt2 = false;
+        document.getElementById("lat1").value = null
+        document.getElementById("lon1").value = null
+        document.getElementById("lat2").value = null
+        document.getElementById("lon2").value = null
+        map.removeLayer(marker);
+        map.removeLayer(marker2);
+        map.removeControl(Route);
+    }
 
     // Bestemmer plasseringen av zoom-knappene
     L.control.zoom({
@@ -284,14 +355,26 @@
         }
     }
 
+
+
     /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
     function openNav() {
         document.getElementById("mySidebar").style.width = "20vw";
+        boolsk = true;
     }
 
     /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
     function closeNav() {
         document.getElementById("mySidebar").style.width = "0";
+        boolsk = false;
+    }
+
+    function haveFrom() {
+        punkt1 = true
+    }
+    
+    function haveTo() {
+        punkt2 = true
     }
 
 </script>
