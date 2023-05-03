@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.first_view, name='first_view'),
     path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/", include("mapapp.urls")),
     path('registration/', views.registration_view, name='registration_view'),
     path('home/',views.home, name='home'),
     path('closeto/', views.closeTo, name='closeto'),
