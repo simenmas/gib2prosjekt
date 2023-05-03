@@ -183,6 +183,9 @@
                 </div>
             </div>
             <div style="padding-left: 1vw;">
+
+                <!-- Here is the form for "I Nærheten" -->
+
                 <form action = "{% url 'closeto' %}" method = "POST" style="padding-left: 1vw;">
                     {% csrf_token %}
                     <h4>Fra punkt:</h4>
@@ -343,23 +346,22 @@
     var marker = null;
     var boolsk =  false;
 
-    function LocateUser() {
-        closeToMap.locate() /* This will return map so you can do chaining */
+    function LocateUser() { // This function finds the latlng of the user with the leaflet.locate plugin.
+        closeToMap.locate()
         .on('locationfound', function(e){
 
             if (marker != null) {
                 marker.remove()
             }
-            marker = L.marker([e.latitude, e.longitude]).addTo(closeToMap)
-            console.log(e.latlng)
+            marker = L.marker([e.latitude, e.longitude]).addTo(closeToMap)  // adds the marker
             document.getElementById("latclose").value = e.latlng.lat
-            document.getElementById("lonclose").value = e.latlng.lng
+            document.getElementById("lonclose").value = e.latlng.lng  // Updates the coordinates in the sidebar form
 
         })
        .on('locationerror', function(e){
             console.log(e);
             alert("Location access denied.");
-        });
+        });  // If user refuses location access
     }
 
     /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */

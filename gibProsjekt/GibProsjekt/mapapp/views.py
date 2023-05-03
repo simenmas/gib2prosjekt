@@ -38,10 +38,10 @@ def search_and_find(request):
             criteria = request.POST.copy()  # declare a variable for the search criteria
 
         
-            points = Point.objects.filter(name__contains=criteria['tittel'])
+            points = Point.objects.filter(name__contains=criteria['tittel'])  # Finds which points contains criteria
     
             
-            if criteria['visibility'] != 'alle':
+            if criteria['visibility'] != 'alle':  # alle is only to return all the points
                 if criteria['visibility'] == 'privat':
                     filtered = Point.objects.filter(user=request.user)
                 else:    
@@ -50,7 +50,7 @@ def search_and_find(request):
                 filtered = Point.objects.all()
             if criteria['category'] != 'alle':
                 filtered = filtered.intersection(Point.objects.filter(category=criteria['category']))
-            
+            # intersection is used to find the elements that are in both querysets
             points = points.intersection(filtered)
             pointcor = list(points.values('lat', 'lon'))
             context = {'points': points, 'pointcor': pointcor}
@@ -73,30 +73,37 @@ def closeTo(request):
 
         lat = copy['lat']
         lon = copy['lon']
+        # Finds the chosen point
+        
         if copy['avstand']:
             radius = copy['avstand']
         else:
             radius = 0
 
-        if copy['tittel']:
+
+        try:
             point = Point.objects.get(name=copy['tittel'])
             lat = point.lat
             lon = point.lon
+        except:
+            pass
 
+        # If the user has written a name for the point, the point is updated to the searched point
         cursor = connection.cursor()
 
         cursor.execute(f"SELECT name, lat, lon FROM mapapp_point WHERE ST_DWithin('POINT({lon} {lat})'::geography, ST_MakePoint(lon,lat), {radius})")
         result = cursor.fetchall()
-
         lats = []
         lons = []
+        
         for i in result:
             lats.append(i[1])
             lons.append(i[2])
         point_lat = Point.objects.filter(lat__in=lats)
         point_lon = Point.objects.filter(lon__in=lons)
         points = point_lat.intersection(point_lon)
-
+        # Finds all the points that contain the coordinates that the points found in the query
+        # It is a roundabout way of getting the points, but it works
         if copy['category'] != 'alle':
             points = points.intersection(Point.objects.filter(category=copy['category']))
         
