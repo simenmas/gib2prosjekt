@@ -102,7 +102,7 @@
             #box1 {
                 height: 7vh;
                 display: flex;
-                flex-grow: 5;
+                flex-grow: 6;
                 flex-direction: row;
                 text-align: center;
             }
@@ -136,7 +136,7 @@
                     </h1>
                 </div>
                 <div style="width: 10vw;">
-                    <button class="boldHeaderButton" onclick="window.location.href='http://127.0.0.1:8000/home/';">
+                    <button class="headerButton" onclick="window.location.href='http://127.0.0.1:8000/home/';">
                         Søk og finn
                     </button>
                 </div>
@@ -146,11 +146,11 @@
                     </button>
                 </div>
                 <div style="width: 10vw;">
-                    <button class="headerButton" onclick="window.location.href='http://127.0.0.1:8000/directions/';">
+                    <button class="boldheaderButton" onclick="window.location.href='http://127.0.0.1:8000/directions/';">
                         Veibeskrivelse
                     </button>
                 </div>
-                <div style="width: 60vw;"></div>
+                <div style="width: 50vw;"></div>
                 <div class="dropdown" style="width: 5vw;">
                     <button class="dropdownButton" onclick="myFunction()">
                         <svg style="pointer-events: none;" xmlns="http://www.w3.org/2000/svg" width="2vw" height="2vw" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -180,7 +180,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 style="text-align: center; padding-top: 5px; padding-left: 50px;">Søk og finn</h1>
+                    <h1 style="text-align: center; padding-top: 5px; padding-left: 50px;">Veibeskrivelse</h1>
                 </div>
             </div>
             <div style="padding-left: 1vw;">
@@ -213,53 +213,7 @@
                     <br>
                     <button class="sidebarButton" style="width: 5vw; text-align: center;" type="submit">Søk</button>
                 </form>
-
-                <h4 style="padding-top: 2vh;">Lagrede punkt:</h4>
-                <ul>
-                    {% for point in points %}
-                    <li> {{point.name}} </li>
-                    {% endfor %}
-                </ul>
             </div>
-        </div>
-       <div id="addPointSidebar" class="sidebar" style="z-index: 999;">
-            <div id="box2">
-                <div>
-                    <svg onclick="closeAdd()" style="padding-top: 5px; cursor: pointer;" xmlns="http://www.w3.org/2000/svg" width="5vh" height="5vh" fill="white" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
-                        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-                    </svg>
-                </div>
-                <div>
-                    <h2 style="text-align: center; padding-top: 5px; padding-left: 50px;">Lagre nytt punkt</h2>
-                </div>
-            </div>
-            <form action = "{% url 'home' %}" method = "POST">
-                {% csrf_token %}
-                <h5>Tittel:</h5>
-                <input type="text" id="name" name="name">
-                <h5>Koordinater:</h5>
-                <p>Klikk i kartet på det punktet du vil lagre.</p>
-                <input type="number" id="lat" name="lat" min = "1" max = "90" step = 0.000000000000000001>
-                <input type="number" id="lon" name="lon" min = "1" max = "90" step = 0.000000000000000001>
-                <h5>Kategorier:</h5>
-                <select name="category" id="category-search">
-                    <option value="hjemsted">Hjemsted</option>
-                    <option value="leseplass">Leseplass</option>
-                    <option value="butikk">Butikk</option>
-                    <option vlaue="turplass">Turplass</option>
-                    <option value="utested">Utested</option>
-                </select>
-                <h5>Synlighet:</h5>
-
-                <select  name="visibility" id="visibility-search">
-                    <option value="privat">Privat</option>
-                    <option value="ForVenner">For venner</option>
-                    <option value="offentlig">Offentlig</option>
-                </select>
-                <h5>Beskrivelse:</h5>
-                <textarea id="description" name="description" cols="30" rows="5"></textarea>
-                <button class="sidebarButton" style="width: 5vw; text-align: center;" type="submit">Lagre</button>
-            </form>
         </div>
         <div id="map" style="position: relative; z-index: 1;">
             <div id="box3">
@@ -271,15 +225,6 @@
                             fill="#AB39B4" viewBox="0 0 16 16"
                             style="padding-left: 15px; cursor: pointer; border: none; position: absolute; z-index: 999;">
                             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-                        </svg>
-                    </div>
-                    <div style="width: 5vw;">
-                        <svg class="bi bi-pin-map-fill" id="AddPoint" onclick="openAdd();event.stopPropagation()"
-                            xmlns="http://www.w3.org/2000/svg" width="7vh" height="7vh"
-                            fill="#AB39B4" viewBox="0 0 16 16"
-                            style="cursor: pointer; border: none; position: absolute; z-index: 999; display: block;">
-                            <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8l3-4z"/>
-                            <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"/>
                         </svg>
                     </div>
                 </div>
@@ -347,39 +292,6 @@
     /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
     function closeNav() {
         document.getElementById("mySidebar").style.width = "0";
-    }
-
-    var marker = null;
-    var boolsk =  false;
-
-    function onMapClick(e) {
-        if (boolsk) {
-            if (marker == null) {
-                marker = L.marker();
-                marker.setLatLng(e.latlng).addTo(map);
-                lat = e.latlng.lat;
-                lon = e.latlng.lng;
-                document.getElementById("lat").value = lat
-                document.getElementById("lon").value = lon
-            } else {
-                marker.remove();
-                marker = null;
-            }
-        }
-    }
-
-    map.on('click', onMapClick);
-
-    function openAdd() {
-        document.getElementById("addPointSidebar").style.width = "20vw";
-        boolsk = true;
-    }
-
-    function closeAdd() {
-        document.getElementById("addPointSidebar").style.width = "0";
-        boolsk = false;
-        marker.remove();
-        marker = null;
     }
 
 </script>
