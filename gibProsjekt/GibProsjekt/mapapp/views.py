@@ -6,8 +6,10 @@ from .models import Point
 # Create your views here.
 def first_view(request):
     if not request.user.is_authenticated:
-
-        return render(request, 'StartPage.html')
+        points = Point.objects.filter(visibility="offentlig")
+        pointcor = list(points.values('lat','lon'))
+        context = {'points': points, 'pointcor':pointcor}
+        return render(request, 'StartPage.html', context)
     else:
         return redirect("/home")
 
@@ -58,7 +60,7 @@ def search_and_find(request):
             pointcor = list(points.values('lat', 'lon'))
             context = {'points': points, 'pointcor': pointcor}
             
-        return render(request, 'Homepage.html', context)
+        return render(request, 'HomePage.html', context)
     else:
         return redirect("/")
 

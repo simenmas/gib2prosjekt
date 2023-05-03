@@ -63,6 +63,7 @@
             </div>
         </div>
         <div id="map" style="position: relative;"></div>
+        {{ pointcor|json_script:"points_json" }}
     </body>
 </html>
 
@@ -80,6 +81,12 @@
         minZoom: 6,
         zoomControl: false // Fjerner defaul zoom-knapper
     }).setView([63.418529, 10.40284], 13)
+
+    //Legger til punkter i kartet
+    let points = JSON.parse(document.getElementById("points_json").textContent)
+    points.forEach(point => {
+        L.marker([point.lat, point.lon]).addTo(map)
+    })
 
     // Bestemmer plasseringen av zoom-knappene
     L.control.zoom({
