@@ -221,7 +221,12 @@
                 <h4 style="padding-top: 2vh;">Lagrede punkt:</h4>
                 <ul>
                     {% for point in points %}
-                    <li> {{point.name}} </li>
+                    {% if point.adress %}
+                        <li> {{point.name}}: {{point.adress}} </li>
+                    {% else %}
+                        <li>{{ point.name }}</li>
+                    {% endif %}
+
                     {% endfor %}
                 </ul>
             </div>
@@ -314,7 +319,9 @@
     //Legger til punkter i kartet
     let points = JSON.parse(document.getElementById("points_json").textContent)
     points.forEach(point => {
-        L.marker([point.lat, point.lon]).addTo(map)
+        var markerinmap = L.marker([point.lat, point.lon])
+        markerinmap.bindPopup("<b>"+point.name+"</b><br>"+point.description)
+        markerinmap.addTo(map)
     })
 
     // Bestemmer plasseringen av zoom-knappene
