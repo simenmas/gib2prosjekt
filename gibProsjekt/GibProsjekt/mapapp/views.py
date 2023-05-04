@@ -10,7 +10,7 @@ from django.db import connection
 def first_view(request):
     if not request.user.is_authenticated:
         points = Point.objects.filter(visibility="offentlig")
-        pointcor = list(points.values('lat','lon'))
+        pointcor = list(points.values('lat','lon','name','description'))
         context = {'points': points, 'pointcor':pointcor}
         return render(request, 'StartPage.html', context)
     else:
@@ -19,7 +19,7 @@ def first_view(request):
 def home(request):
     if request.user.is_authenticated:
         points = Point.objects.all()
-        pointcor = list(points.values('lat','lon'))
+        pointcor = list(points.values('lat', 'lon', 'name', 'description'))
         context = {'points': points, 'pointcor':pointcor}
         if request.method == "POST":  # request.POST is immutable, so we need a copy
             
@@ -54,13 +54,13 @@ def search_and_find(request):
                 filtered = filtered.intersection(Point.objects.filter(category=criteria['category']))
             # intersection is used to find the elements that are in both querysets
             points = points.intersection(filtered)
-            pointcor = list(points.values('lat', 'lon'))
+            pointcor = list(points.values('lat', 'lon', 'name', 'description'))
             context = {'points': points, 'pointcor': pointcor}
 
 
         else:
             points = Point.objects.all()
-            pointcor = list(points.values('lat', 'lon'))
+            pointcor = list(points.values('lat', 'lon', 'name', 'description'))
             context = {'points': points, 'pointcor': pointcor}
             
         return render(request, 'HomePage.html', context)
@@ -110,12 +110,12 @@ def closeTo(request):
             points = points.intersection(Point.objects.filter(category=copy['category']))
         
         points = points.intersection(Point.objects.exclude(name=copy['tittel']))
-        pointcor = list(points.values('lat', 'lon'))
+        pointcor = list(points.values('lat', 'lon', 'name', 'description'))
         context = {'points': points, 'pointcor': pointcor}
 
     else:
         points = Point.objects.all()
-        pointcor = list(points.values('lat', 'lon'))
+        pointcor = list(points.values('lat', 'lon', 'name', 'description'))
         context = {'points': points, 'pointcor': pointcor}
 
     return render(request, 'CloseTo.html', context)
@@ -124,7 +124,7 @@ def closeTo(request):
 def directions(request):
     if request.user.is_authenticated:
         points = Point.objects.all()
-        pointcor = list(points.values('lat','lon'))
+        pointcor = list(points.values('lat','lon','name','description'))
         context = {'points': points, 'pointcor':pointcor}
         return render(request, 'Directions.html', context)
     else: 
@@ -133,7 +133,7 @@ def directions(request):
 def profile(request):
     if request.user.is_authenticated:
             points = Point.objects.filter(user=request.user)
-            pointcor = list(points.values('lat', 'lon'))
+            pointcor = list(points.values('lat', 'lon','name','description'))
             context = {'points': points, 'pointcor': pointcor}
             return render(request, 'ProfilePage.html', context)
     else:

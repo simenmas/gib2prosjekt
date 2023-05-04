@@ -187,7 +187,9 @@
      //Legger til punkter i kartet
      let points = JSON.parse(document.getElementById("points_json").textContent)
     points.forEach(point => {
-        L.marker([point.lat, point.lon]).addTo(profilemap)
+        var markerinmap = L.marker([point.lat, point.lon])
+        markerinmap.bindPopup("<b>"+point.name+"</b><br>"+point.description)
+        markerinmap.addTo(profilemap)
     })
 
 
