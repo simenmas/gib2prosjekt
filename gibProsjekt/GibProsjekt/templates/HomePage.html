@@ -237,7 +237,7 @@
                     <h2 style="text-align: center; padding-top: 5px; padding-left: 50px;">Lagre nytt punkt</h2>
                 </div>
             </div>
-            <form action = "{% url 'home' %}" method = "POST">
+            <form action = "{% url 'home' %}" method = "POST" style="padding-left: 1vw;">
                 {% csrf_token %}
                 <h5>Tittel:</h5>
                 <input type="text" id="name" name="name">

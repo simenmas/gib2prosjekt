@@ -61,13 +61,7 @@
                 padding-bottom: 2vh;
             }
 
-            #header {
-                height: 7vh;
-                background-color: #41B439;
-                color: white;
-            }
-
-            #box1 {
+            .box1 {
                 height: 7vh;
                 display: flex;
                 flex-grow: 5;
@@ -75,7 +69,7 @@
                 text-align: center;
             }
 
-            #box2 {
+            .box2 {
                 font-family: monospace;
                 display: flex;
                 flex-grow: 3;
@@ -83,10 +77,16 @@
                 align-items: center;
             }
 
-            #box3 {
+            .box3 {
                 display: flex;
                 flex-grow: 2;
                 flex-direction: row;
+            }
+
+            #header {
+                height: 7vh;
+                background-color: #41B439;
+                color: white;
             }
 
             #map {
@@ -98,7 +98,7 @@
     </head>
     <body style="padding: 0; margin: 0;">
         <div id="header">
-            <div id="box1">
+            <div class="box1">
                 <div style="width: 15vw;">
                     <h1 style="font-family: monospace; font-weight: bolder; padding-top: 1vh; cursor: pointer;"
                         onclick="window.location.href='http://127.0.0.1:8000/home/';">
@@ -142,26 +142,27 @@
                 </div>
             </div>
         </div>
-     
-        <div id="box2">
-            <div id="box3" style="height: 20vh; width: 50vw;">
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                    width="10vh" height="10vh" fill="currentColor"
-                    class="bi bi-person-bounding-box" viewBox="0 0 16 16"
-                    style="margin-top: 5vh;">
-                    <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z"/>
-                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                </svg>
-                <div id="box3">
-                    <div style="margin-top: 7vh; margin-left: 2vw; font-weight: bold; text-align: left;">
+        <div class="box2">
+            <div class="box3" style="height: 20vh; width: 50vw; align-content: center;">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                        width="10vh" height="10vh" fill="currentColor"
+                        class="bi bi-person-bounding-box" viewBox="0 0 16 16"
+                        style="margin-top: 5vh;">
+                        <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                    </svg>
+                </div>
+                <div class="box3">
+                    <div style="margin-top: 9vh; margin-left: 2vw; font-weight: bold; text-align: left;">
                         <h4>Brukernavn:</h4>
                     </div>
-                    <div style="margin-top: 7vh; text-align: right; padding-left: 5vw; width: calc((50vw-10vh)*0.7);">
+                    <div style="margin-top: 9vh; text-align: right; padding-left: 5vw; width: calc((50vw-10vh)*0.7);">
                         <h4>{{request.user.get_username}}</h4>
                     </div>
                 </div>
             </div>
-            <h4 style="font-weight: bold; height: 5vh; margin: 0;">Mine punkt:</h4>
+            <div><h4 style="font-weight: bold; height: 5vh; margin: 0;">Mine punkt:</h4></div>
             <div id="map" style="position: relative;"></div>
         </div>
         {{ pointcor|json_script:"points_json" }}
