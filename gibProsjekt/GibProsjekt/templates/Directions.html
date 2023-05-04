@@ -223,15 +223,16 @@
         </div>
         <div id="map" style="position: relative; z-index: 1;">
             <div id="box3">
-                <div style="height: 83vh;"></div>
+                <div style="height: 82vh;"></div>
                 <div id="box2" style="height: 10vh;">
                     <div style="width: 5vw">
-                        <svg class="bi bi-plus-circle-fill" onclick="openNav();event.stopPropagation()"
-                            xmlns="http://www.w3.org/2000/svg" width="8vh" height="8vh"
+                        <svg class="bi bi-signpost-2-fill" onclick="openNav();event.stopPropagation()"
+                            xmlns="http://www.w3.org/2000/svg" width="10vh" height="10vh"
                             fill="#AB39B4" viewBox="0 0 16 16"
                             style="padding-left: 15px; cursor: pointer; border: none; position: absolute; z-index: 999;">
-                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+                            <path d="M7.293.707A1 1 0 0 0 7 1.414V2H2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h5v1H2.5a1 1 0 0 0-.8.4L.725 8.7a.5.5 0 0 0 0 .6l.975 1.3a1 1 0 0 0 .8.4H7v5h2v-5h5a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1H9V6h4.5a1 1 0 0 0 .8-.4l.975-1.3a.5.5 0 0 0 0-.6L14.3 2.4a1 1 0 0 0-.8-.4H9v-.586A1 1 0 0 0 7.293.707z"/>
                         </svg>
+                        
                     </div>
                 </div>
             </div>
@@ -294,8 +295,8 @@
             console.log(e);
             lat_to = e.latlng.lat;
             lon_to = e.latlng.lng;
-            document.getElementById("lat2").value = lat_from;
-            document.getElementById("lon2").value = lon_from;
+            document.getElementById("lat2").value = lat_to;
+            document.getElementById("lon2").value = lon_to;
             if (marker2) {
                 map.removeLayer(marker2);
             }
@@ -313,6 +314,14 @@
                     L.latLng(lat_to, lon_to)
                 ]
             }).addTo(map);
+            punkt1 = false;
+            punkt2 = false;
+            document.getElementById("lat1").value = null
+            document.getElementById("lon1").value = null
+            document.getElementById("lat2").value = null
+            document.getElementById("lon2").value = null
+            map.removeLayer(marker);
+            map.removeLayer(marker2);
         }
     };
 
